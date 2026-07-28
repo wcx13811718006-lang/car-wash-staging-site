@@ -1,15 +1,15 @@
 {
   "schema": "car-wash-public-release-manifest-v1",
-  "snapshot_id": "staging-20260728T060801-679fa5a8",
-  "generated_at": "2026-07-28T06:08:01.961852+00:00",
+  "snapshot_id": "staging-20260728T061219-9585b631",
+  "generated_at": "2026-07-28T06:12:19.756190+00:00",
   "case_count": 1,
   "release_profile": "PUBLIC_PILOT",
   "asset_mode": "NO_EXTERNAL_IMAGE",
   "approved_public_copy_hashes": {
-    "case-f1e1186726cc": "9ef6eb1cbf9daaf7c0b35d78153312955f27b994565d035d49c343a216a72403"
+    "case-f1e1186726cc": "40c7da38794a16e337c03dd0591121cbcf7cff431bfbc1daf396f828748a7db9"
   },
   "exact_case_versions": {
-    "case-f1e1186726cc4e3e": "case-f1e1186726cc4e3e-v-74cfcc6a5fac"
+    "case-f1e1186726cc4e3e": "case-f1e1186726cc4e3e-v-e35f27518ae3"
   },
   "source_commit_sha": "0000000000000000000000000000000000000000",
   "public_schema_version": "public-case-copy-v1",
