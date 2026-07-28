@@ -6,10 +6,10 @@
   <meta name="description" content="Source-bounded climate adaptation case studies for Washington and the Pacific Northwest.">
   <title>CAR-WASH Climate Adaptation Case Studies</title>
   <link rel="icon" href="data:,">
-  <link rel="preload" as="image" href="/assets/site-hero-washington-state-mount-rainier-nps-1280.jpg" fetchpriority="high">
-  <link rel="stylesheet" href="/public.css">
+  <link rel="preload" as="image" href="assets/site-hero-washington-state-mount-rainier-nps-1280.jpg" fetchpriority="high">
+  <link rel="stylesheet" href="public.css?v=staging-20260728T175739-94cb9953">
 </head>
-<body>
+<body class="research-atlas">
   <a class="skip-link" href="#library">Skip to case studies</a>
   
   <aside class="prototype-label" aria-label="Internal review status" data-review-banner>
@@ -21,22 +21,23 @@
   </aside>
   
   <header class="site-header">
-    <a class="brand" href="/library" aria-label="CAR-WASH case studies home">
+    <a class="brand" href="./" aria-label="CAR-WASH case studies home">
       <strong>CAR-WASH</strong><span>Climate Adaptation Case Studies</span>
     </a>
     <button class="menu-button" type="button" aria-expanded="false" aria-controls="site-nav">Menu</button>
     <nav id="site-nav" aria-label="Primary navigation">
-      <a class="active" href="/library">Case Studies</a>
+      <a class="active" href="./">Case Studies</a>
       <a href="#using-cases">Using Case Studies</a>
       <a href="#methodology">Methodology</a>
     </nav>
   </header>
 
-  <section class="hero" aria-labelledby="hero-title">
+  <section class="hero research-atlas-hero" aria-labelledby="hero-title">
     <div class="hero-copy">
-      <p class="eyebrow">Washington climate adaptation</p>
+      <p class="eyebrow">Washington climate adaptation atlas</p>
       <h1 id="hero-title">Climate Adaptation Case Studies for Washington State</h1>
       <p>Washington and Pacific Northwest cases are shown alongside clearly labelled transferable examples from other regions.</p>
+      <p class="hero-scope"><strong id="hero-case-count">27</strong> source-linked case records in one human-reviewed working collection.</p>
     </div>
     <a class="hero-guide" href="#using-cases">
       <span>Why case studies?</span>
@@ -50,6 +51,14 @@
       <button type="button" class="tab active" data-collection="">All cases</button>
       <button type="button" class="tab" data-collection="Washington and Pacific Northwest">Washington + Pacific Northwest</button>
       <button type="button" class="tab" data-collection="Transferable Examples from Other Regions">Transferable examples</button>
+    </section>
+
+    <section class="portfolio-intro" aria-labelledby="portfolio-title">
+      <div>
+        <p class="eyebrow">Explore the portfolio</p>
+        <h2 id="portfolio-title">Adaptation in practice, with the evidence attached.</h2>
+      </div>
+      <p>Move from a statewide view into specific actions, implementation stages, reported evidence, and limits. Every card opens a source-linked research record.</p>
     </section>
 
     <div class="mobile-result-bar">
@@ -132,12 +141,13 @@
 
   <footer class="site-footer">
     <div><strong>CAR-WASH Case Study Library</strong><p>Human-reviewed research staging for WASCO/CIG discussion.</p></div>
-    <nav aria-label="Footer"><a href="#methodology">Methodology</a><a href="#using-cases">Accessibility and use</a><a href="mailto:cig@uw.edu">Contact</a><a href="/library">Case library</a></nav>
+    <nav aria-label="Footer"><a href="#methodology">Methodology</a><a href="#using-cases">Accessibility and use</a><a href="mailto:cig@uw.edu">Contact</a><a href="./">Case library</a></nav>
     <p>Version <span id="footer-version">snapshot pending</span>. Image rights and UW deployment require separate approval.</p>
   </footer>
 
   <script>window.__wascoConsoleErrors=[];addEventListener('error',e=>window.__wascoConsoleErrors.push(String(e.message)));addEventListener('unhandledrejection',e=>window.__wascoConsoleErrors.push(String(e.reason)));</script>
-  <script src="/cases.js"></script>
-  <script src="/public.js"></script>
+  <script>window.CAR_WASH_STATIC_SNAPSHOT=true;</script>
+  <script src="cases.js?v=staging-20260728T175739-94cb9953"></script>
+  <script src="public.js?v=staging-20260728T175739-94cb9953"></script>
 </body>
 </html>

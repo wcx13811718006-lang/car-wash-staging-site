@@ -3,7 +3,14 @@
   const cases = window.CAR_WASH_CASES || [];
   const meta = window.CAR_WASH_META || {};
   const assetVersion = encodeURIComponent(meta.snapshot_id || meta.dataset_version || "staging");
-  const fileMode = location.protocol === "file:";
+  const fileMode = location.protocol === "file:" || window.CAR_WASH_STATIC_SNAPSHOT === true;
+  const initialParams = new URLSearchParams(location.search);
+  const requestedLayout = initialParams.get("layout") || "standard";
+  const layoutMode = ["standard", "compact", "reading"].includes(requestedLayout) ? requestedLayout : "standard";
+  const layoutClasses = {standard:"layout-standard", compact:"layout-compact", reading:"layout-reading"};
+  const previewMode = initialParams.get("preview") === "1";
+  document.body.classList.add(layoutClasses[layoutMode]);
+  if (previewMode) document.body.classList.add("website-preview");
   const $ = selector => document.querySelector(selector);
   const $$ = selector => [...document.querySelectorAll(selector)];
   const esc = value => String(value ?? "").replace(/[&<>"']/g, char => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[char]));
@@ -38,9 +45,12 @@
   let activeCollection = "";
   let returnFocus = null;
   let openedInternally = false;
-  let visibleLimit = matchMedia("(max-width: 719px)").matches ? 6 : 12;
+  let visibleLimit = matchMedia("(max-width: 719px)").matches ? 6 : 27;
   let filteredRows = [];
+  let originCard = null;
   const compared = new Set();
+  const cardExcerptLength = layoutMode === "compact" ? 92 : layoutMode === "reading" ? 250 : 156;
+  const featuredExcerptLength = layoutMode === "compact" ? 145 : layoutMode === "reading" ? 290 : 210;
 
   function populate(select, options) { options.forEach(value => select.insertAdjacentHTML("beforeend", `<option value="${esc(value)}">${esc(value)}</option>`)); }
   function values(key) { return [...new Set(cases.flatMap(item => arr(item[key])).map(normalize).filter(Boolean))].sort(); }
@@ -63,6 +73,8 @@
 
   function listUrl() {
     const params = new URLSearchParams();
+    if (layoutMode !== "standard") params.set("layout", layoutMode);
+    if (previewMode) params.set("preview", "1");
     if (activeCollection) params.set("collection", activeCollection);
     Object.entries(controls).forEach(([key, control]) => { const value = control.value.trim(); if (value && !(key === "sort" && value === "collection")) params.set(key, value); });
     if (visibleLimit !== (matchMedia("(max-width: 719px)").matches ? 6 : 12)) params.set("limit", String(visibleLimit));
@@ -122,10 +134,9 @@
   }
 
   function card(item) {
-    const action = clean(normalize(item.adaptation_action)) || "Action description pending review";
     const fields = matchedFields(item);
     const checked = compared.has(item.public_id);
-    return `<article class="case-card" data-case-id="${esc(item.public_id)}"><a class="card-image-link open-case" data-case-slug="${esc(slug(item))}" href="${caseHref(item)}" aria-label="Open ${esc(normalize(item.title))}">${picture(item)}</a><div class="card-copy"><p class="collection-label">${esc(normalize(item.collection))}</p>${tags(item)}<h2><a class="open-case" data-case-slug="${esc(slug(item))}" href="${caseHref(item)}">${esc(normalize(item.title))}</a></h2><p class="place">${esc(clean(item.location || item.region) || "Location pending review")}</p>${fields.length ? `<p class="match-note">Matched: ${esc(fields.join(", "))}</p>` : ""}<p class="action"><b>Action</b>${esc(excerpt(action, 92))}</p><p class="excerpt">${esc(excerpt(item.summary, 120))}</p><div class="card-meta"><span>${esc(stage(item))}</span><span>${esc(sourceDate(item))}</span></div><label class="compare-check"><input type="checkbox" data-compare="${esc(item.public_id)}" ${checked ? "checked" : ""}> Compare</label></div></article>`;
+    return `<article class="case-card" data-case-id="${esc(item.public_id)}"><a class="card-image-link open-case" data-case-slug="${esc(slug(item))}" href="${caseHref(item)}" aria-label="Open ${esc(normalize(item.title))}">${picture(item)}<span class="image-action">View case</span></a><div class="card-copy"><p class="collection-label">${esc(normalize(item.collection))}</p>${tags(item)}<h2><a class="open-case" data-case-slug="${esc(slug(item))}" href="${caseHref(item)}">${esc(normalize(item.title))}</a></h2><p class="place">${esc(clean(item.location || item.region) || "Location pending review")}</p>${fields.length ? `<p class="match-note">Matched: ${esc(fields.join(", "))}</p>` : ""}<div class="card-overview"><b>Case overview</b><p>${esc(excerpt(item.summary, cardExcerptLength))}</p></div><div class="card-meta"><span><b>Implementation</b>${esc(stage(item))}</span><span><b>Source checked</b>${esc(sourceDate(item))}</span></div><label class="compare-check"><input type="checkbox" data-compare="${esc(item.public_id)}" ${checked ? "checked" : ""}> Compare</label></div></article>`;
   }
 
   function chips() {
@@ -139,7 +150,7 @@
 
   function drawFeatured() {
     const item = curatedFeatured();
-    $("#featured").innerHTML = item ? `<article class="featured-card">${picture(item, {hero:true, eager:true})}<div class="featured-copy"><p class="eyebrow">Curated featured case</p><h2>${esc(normalize(item.title))}</h2><p>${esc(excerpt(item.summary, 210))}</p><a class="featured-link open-case" data-case-slug="${esc(slug(item))}" href="${caseHref(item)}">Explore this case</a></div></article>` : "";
+    $("#featured").innerHTML = item ? `<article class="featured-card">${picture(item, {hero:true, eager:true})}<div class="featured-copy"><p class="eyebrow">Curated featured case</p><h2>${esc(normalize(item.title))}</h2><p>${esc(excerpt(item.summary, featuredExcerptLength))}</p><a class="featured-link open-case" data-case-slug="${esc(slug(item))}" href="${caseHref(item)}">Explore this case</a></div></article>` : "";
   }
 
   function draw({syncUrl = true} = {}) {
@@ -195,9 +206,19 @@
   function openCase(item, {push = true, trigger = null} = {}) {
     if (!item) return;
     returnFocus = trigger || document.activeElement;
+    originCard?.classList.remove("is-origin");
+    originCard = trigger?.closest?.(".case-card") || null;
+    originCard?.classList.add("is-origin");
     openedInternally = push;
     const detail = $("#case-detail");
-    const main = [["Adaptation approach", item.adaptation_action], ["What the source reports", item.reported_outcomes || arr(item.outcomes).join(" ")], ["Context for transfer", item.transferability || item.limitations], ["Evidence and context", item.climate_mechanism]].filter(([, value]) => normalize(value));
+    const main = [
+      ["Case overview", item.summary],
+      ["Adaptation approach", item.adaptation_action],
+      ["Reported evidence", item.reported_outcomes || arr(item.outcomes).join(" ")],
+      ["Evidence limits", item.limitations],
+      ["Climate context", item.climate_mechanism],
+      ["Transferability", item.transferability],
+    ].filter(([, value]) => normalize(value));
     const production = meta.render_mode === "PUBLIC_PRODUCTION";
     const facts = [["Place", item.location || item.region], ["Hazards", arr(item.hazards).join(", ")], ["Location type", arr(item.location_types).join(", ")], ["Sector", arr(item.themes).join(", ")], ["Adaptation strategy", arr(item.adaptation_strategies).join(", ")], ["Implementation stage", stage(item)], ["Lead organization", item.lead_organization], ["Partners", arr(item.partners).join(", ")], ["Last source check", clean(item.last_source_checked_at)], ["Image credit", item.asset_attribution]].filter(([, value]) => normalize(value));
     if (!production) {
@@ -205,8 +226,11 @@
       facts.push(["Image rights", item.asset_rights_status || "Not recorded"]);
     }
     const related = relatedCases(item);
-    detail.innerHTML = `<div class="detail-hero">${picture(item, {eager:true})}<button class="close" type="button" aria-label="Close case">&times;</button><div class="detail-title">${tags(item)}<h2 id="detail-title">${esc(normalize(item.title))}</h2><p>${esc(clean(item.location || item.region) || "Location pending review")}</p></div></div><div class="detail-utility"><button data-copy-link type="button">Copy permalink</button><button data-copy-citation type="button">Copy citation</button><button data-print type="button">Print case</button><span class="utility-status" role="status"></span></div><div class="detail-body"><div><p id="detail-summary">${esc(normalize(item.summary))}</p>${main.map(([label,value]) => `<h3>${esc(label)}</h3><p>${esc(normalize(value))}</p>`).join("")}<a class="source-link" href="${esc(item.source_url)}" target="_blank" rel="noopener">Open cited public source <span aria-hidden="true">&rarr;</span></a>${related.length ? `<section class="related"><h3>Related cases</h3>${related.map(candidate => `<a class="related-link" href="${caseHref(candidate)}" data-related="${esc(slug(candidate))}">${esc(candidate.title)}</a>`).join("")}</section>` : ""}</div><aside class="fact-list">${facts.map(([label,value]) => `<div class="fact"><b>${esc(label)}</b>${esc(normalize(value))}</div>`).join("")}</aside></div>`;
-    $("#case-overlay").hidden = false;
+    detail.innerHTML = `<div class="detail-hero">${picture(item, {eager:true})}<button class="close" type="button" aria-label="Close case">&times;</button><div class="detail-title">${tags(item)}<h2 id="detail-title">${esc(normalize(item.title))}</h2><p>${esc(clean(item.location || item.region) || "Location pending review")}</p></div></div><div class="detail-utility"><button data-copy-link type="button">Copy permalink</button><button data-copy-citation type="button">Copy citation</button><button data-print type="button">Print case</button><span class="utility-status" role="status"></span></div><div class="detail-body"><div class="detail-narrative">${main.map(([label,value], index) => `<section class="${index === 0 ? "detail-lede" : ""}"><h3>${esc(label)}</h3><p${index === 0 ? ' id="detail-summary"' : ""}>${esc(normalize(value))}</p></section>`).join("")}<a class="source-link" href="${esc(item.source_url)}" target="_blank" rel="noopener">Open cited public source <span aria-hidden="true">&rarr;</span></a>${related.length ? `<section class="related"><h3>Related cases</h3>${related.map(candidate => `<a class="related-link" href="${caseHref(candidate)}" data-related="${esc(slug(candidate))}">${esc(candidate.title)}</a>`).join("")}</section>` : ""}</div><aside class="fact-list">${facts.map(([label,value]) => `<div class="fact"><b>${esc(label)}</b>${esc(normalize(value))}</div>`).join("")}</aside></div>`;
+    const overlay = $("#case-overlay");
+    overlay.hidden = false;
+    overlay.classList.add("is-entering");
+    requestAnimationFrame(() => requestAnimationFrame(() => overlay.classList.remove("is-entering")));
     setPageInert(true);
     if (push) history.pushState({view:"case", slug:slug(item), list:listUrl()}, "", caseHref(item));
     detail.querySelector(".close").focus();
@@ -218,10 +242,15 @@
   }
 
   function closeCase({useHistory = true} = {}) {
-    $("#case-overlay").hidden = true;
+    const overlay = $("#case-overlay");
+    overlay.classList.add("is-leaving");
+    overlay.hidden = true;
+    overlay.classList.remove("is-leaving", "is-entering");
     setPageInert(false);
     if (useHistory && openedInternally) history.back(); else history.replaceState({view:"list"}, "", listUrl());
     openedInternally = false;
+    originCard?.classList.remove("is-origin");
+    originCard = null;
     if (returnFocus?.isConnected) returnFocus.focus(); else $("#count").focus?.();
   }
 
@@ -244,7 +273,7 @@
   function openCompare() {
     const selected = [...compared].map(id => cases.find(item => item.public_id === id)).filter(Boolean);
     if (selected.length < 2) return;
-    const rows = [["Location", item => item.location || item.region], ["Hazards", item => arr(item.hazards).join(", ")], ["Climate mechanism", item => item.climate_mechanism], ["Adaptation action", item => item.adaptation_action], ["Stage", stage], ["Reported outcomes", item => arr(item.outcomes).join(" ")], ["Transferability", item => item.transferability], ["Limitations", item => item.limitations], ["Source check", sourceDate]];
+    const rows = [["Location", item => item.location || item.region], ["Hazards", item => arr(item.hazards).join(", ")], ["Climate mechanism", item => item.climate_mechanism], ["Adaptation action", item => item.adaptation_action], ["Stage", stage], ["Reported outcomes", item => arr(item.outcomes).join(" ")], ["Transferability", item => item.transferability], ["Evidence limits", item => item.limitations], ["Source check", sourceDate]];
     $("#compare-detail").innerHTML = `<div class="compare-head"><div><p class="eyebrow">Research utility</p><h2 id="compare-title">Compare selected cases</h2></div><button class="close" type="button" aria-label="Close comparison">&times;</button></div><div class="compare-table-wrap"><table class="compare-table"><thead><tr><th>Field</th>${selected.map(item => `<th>${esc(item.title)}</th>`).join("")}</tr></thead><tbody>${rows.map(([label, getter]) => `<tr><th>${esc(label)}</th>${selected.map(item => `<td>${esc(normalize(getter(item)) || "Not recorded")}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
     $("#compare-overlay").hidden = false; setPageInert(true); $("#compare-detail .close").focus(); $("#compare-detail .close").addEventListener("click", closeCompare);
   }
@@ -278,9 +307,9 @@
   function openTour() { showTourStep(0); $("#tour-overlay").hidden = false; setPageInert(true); $("#tour-close").focus(); }
   function closeTour() { $("#tour-overlay").hidden = true; setPageInert(false); $("#tour-trigger").focus(); }
 
-  Object.values(controls).forEach(control => control.addEventListener("input", () => { visibleLimit = matchMedia("(max-width: 719px)").matches ? 6 : 12; draw(); }));
+  Object.values(controls).forEach(control => control.addEventListener("input", () => { visibleLimit = matchMedia("(max-width: 719px)").matches ? 6 : 27; draw(); }));
   $("#active-filters").addEventListener("click", event => { const key = event.target.closest("[data-clear]")?.dataset.clear; if (!key) return; if (key === "all") { activeCollection = ""; Object.entries(controls).forEach(([name, control]) => { control.value = name === "sort" ? "collection" : ""; }); } else if (key === "collection") activeCollection = ""; else controls[key].value = ""; $$(".tab").forEach(tab => tab.classList.toggle("active", tab.dataset.collection === activeCollection)); draw(); });
-  $$(".tab").forEach(tab => tab.addEventListener("click", () => { activeCollection = tab.dataset.collection; $$(".tab").forEach(item => item.classList.toggle("active", item === tab)); visibleLimit = matchMedia("(max-width: 719px)").matches ? 6 : 12; draw(); }));
+  $$(".tab").forEach(tab => tab.addEventListener("click", () => { activeCollection = tab.dataset.collection; $$(".tab").forEach(item => item.classList.toggle("active", item === tab)); visibleLimit = matchMedia("(max-width: 719px)").matches ? 6 : 27; draw(); }));
   $("#load-more").addEventListener("click", () => { visibleLimit += matchMedia("(max-width: 719px)").matches ? 6 : 12; draw(); });
   $("#export-csv").addEventListener("click", exportCsv);
   $("#filter-trigger").addEventListener("click", openFilters); $("#filter-close").addEventListener("click", closeFilters); $("#filter-backdrop").addEventListener("click", closeFilters); $("#apply-filters").addEventListener("click", closeFilters);
@@ -307,7 +336,8 @@
 
   $("#snapshot-meta").textContent = meta.render_mode === "PUBLIC_PRODUCTION"
     ? `Published snapshot ${meta.snapshot_id || meta.dataset_version || ""}.`
-    : `Internal staging snapshot ${meta.snapshot_id || meta.dataset_version || "pending"}. No public-use approval is implied.`;
+    : `${previewMode ? "Local website preview" : "Internal staging snapshot"} ${meta.snapshot_id || meta.dataset_version || "pending"}. No public-use approval is implied.`;
   $("#footer-version").textContent = meta.snapshot_id || meta.dataset_version || "pending";
+  $("#hero-case-count").textContent = String(cases.length);
   readUrlState(); drawFeatured(); draw({syncUrl:false}); wireCaseAnchors(); routeFromLocation();
 })();
