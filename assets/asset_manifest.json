@@ -1,0 +1,89 @@
+[
+  {
+    "alt_text": "Mount Rainier rising above a rocky ridge and evergreen trees in Washington State.",
+    "asset_id": "site-hero-washington",
+    "asset_role": "HERO",
+    "attribution": "NPS Photo, Mount Rainier from Spray Park. U.S. public domain.",
+    "case_id": "site_hero",
+    "focal_point": "center 42%",
+    "height": 2000,
+    "last_verified_at": "2026-07-28T06:08:01.966642+00:00",
+    "license_name": "U.S. PUBLIC DOMAIN",
+    "license_url": "https://www.nps.gov/aboutus/disclaimer.htm",
+    "mime_type": "image/jpeg",
+    "public_export_path": "assets/washington-state-mount-rainier-nps.jpg",
+    "responsive_variants": [
+      {
+        "filename": "site-hero-washington-state-mount-rainier-nps-1280.avif",
+        "width": 1280,
+        "format": "avif",
+        "mime_type": "image/avif",
+        "sha256": "94436a89aa0f0c78b477d792617c1fbc5fbba83c0a0844266e4b248d2f1bf172",
+        "bytes": 72522
+      },
+      {
+        "filename": "site-hero-washington-state-mount-rainier-nps-1280.jpg",
+        "width": 1280,
+        "format": "jpeg",
+        "mime_type": "image/jpeg",
+        "sha256": "ae9748c4d3b84693ca1b56d1d3d9069a490cc1e3d472209baee5bbd49a3c8596",
+        "bytes": 182780
+      },
+      {
+        "filename": "site-hero-washington-state-mount-rainier-nps-1280.webp",
+        "width": 1280,
+        "format": "webp",
+        "mime_type": "image/webp",
+        "sha256": "ada2daf9da292bf6a9326683fc12bf1b014efc89d0f77e127ea0607d1fd80761",
+        "bytes": 139576
+      },
+      {
+        "filename": "site-hero-washington-state-mount-rainier-nps-1920.avif",
+        "width": 1920,
+        "format": "avif",
+        "mime_type": "image/avif",
+        "sha256": "73f82de2954e2038a96041423a81c1efc018d03cff229112ca8668e1bf089229",
+        "bytes": 149579
+      },
+      {
+        "filename": "site-hero-washington-state-mount-rainier-nps-1920.jpg",
+        "width": 1920,
+        "format": "jpeg",
+        "mime_type": "image/jpeg",
+        "sha256": "c04e34e77932d33ec33cbd57ac3a15d289ef9596f19138d7ce07779ad72be34b",
+        "bytes": 386585
+      },
+      {
+        "filename": "site-hero-washington-state-mount-rainier-nps-1920.webp",
+        "width": 1920,
+        "format": "webp",
+        "mime_type": "image/webp",
+        "sha256": "3c30f279b57d7e1ead3659f84d2e32026a88ef303dcd22f71cbcf688a2ea7796",
+        "bytes": 291982
+      }
+    ],
+    "rights_status": "APPROVED",
+    "sha256": "7b82a55987c76e3db9e5d08a5eb566676eb523965b45dfd7f4cdcc85e5fb7201",
+    "source_url": "https://npgallery.nps.gov/AssetDetail/caac960d-55ea-4666-9182-6893bc6854b8",
+    "width": 3000
+  },
+  {
+    "alt_text": "Illustration of shaded urban cooling streets and planted public space.",
+    "asset_id": "asset-case-f1e1186726cc",
+    "asset_role": "CARD",
+    "attribution": "CAR-WASH project-generated icon; no external image used.",
+    "case_id": "case-f1e1186726cc",
+    "focal_point": "center",
+    "generator_version": "CAR-WASH-icon-v1",
+    "height": 900,
+    "last_verified_at": "2026-07-28T06:08:01.978503+00:00",
+    "license_name": "PROJECT_OWNED_GENERATED_ART",
+    "license_url": null,
+    "mime_type": "image/svg+xml",
+    "public_export_path": "assets/case-f1e1186726cc-paris-cooling.svg",
+    "rights_status": "PROJECT_GENERATED_APPROVED_FOR_PUBLIC_WEB",
+    "sha256": "5433be3fd1ef0d2e370f2b2d84b2359202a8701141122e5ca8776033b4cad8d2",
+    "source_url": null,
+    "width": 1600
+  }
+]

@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Source-bounded climate adaptation case studies for Washington and the Pacific Northwest.">
+  <title>CAR-WASH Climate Adaptation Case Studies</title>
+  <link rel="icon" href="data:,">
+  <link rel="preload" as="image" href="/assets/site-hero-washington-state-mount-rainier-nps-1280.jpg" fetchpriority="high">
+  <link rel="stylesheet" href="/public.css">
+</head>
+<body>
+  <a class="skip-link" href="#library">Skip to case studies</a>
+  
+  <aside class="prototype-label" aria-label="Internal review status" data-review-banner>
+    <span>Internal review prototype — not for public distribution or citation</span>
+    <div>
+      <button id="tour-trigger" type="button">Review tour</button>
+      <a id="feedback-link" href="mailto:cig@uw.edu?subject=CAR-WASH%20prototype%20feedback">Feedback</a>
+    </div>
+  </aside>
+  
+  <header class="site-header">
+    <a class="brand" href="/library" aria-label="CAR-WASH case studies home">
+      <strong>CAR-WASH</strong><span>Climate Adaptation Case Studies</span>
+    </a>
+    <button class="menu-button" type="button" aria-expanded="false" aria-controls="site-nav">Menu</button>
+    <nav id="site-nav" aria-label="Primary navigation">
+      <a class="active" href="/library">Case Studies</a>
+      <a href="#using-cases">Using Case Studies</a>
+      <a href="#methodology">Methodology</a>
+    </nav>
+  </header>
+
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="hero-copy">
+      <p class="eyebrow">Washington climate adaptation</p>
+      <h1 id="hero-title">Climate Adaptation Case Studies for Washington State</h1>
+      <p>Washington and Pacific Northwest cases are shown alongside clearly labelled transferable examples from other regions.</p>
+    </div>
+    <a class="hero-guide" href="#using-cases">
+      <span>Why case studies?</span>
+      <strong>See the action, evidence, and limits behind each example.</strong>
+      <b>How to use this library <span aria-hidden="true">&rarr;</span></b>
+    </a>
+  </section>
+
+  <main id="library" class="page-shell">
+    <section class="collection-tabs" aria-label="Case collections">
+      <button type="button" class="tab active" data-collection="">All cases</button>
+      <button type="button" class="tab" data-collection="Washington and Pacific Northwest">Washington + Pacific Northwest</button>
+      <button type="button" class="tab" data-collection="Transferable Examples from Other Regions">Transferable examples</button>
+    </section>
+
+    <div class="mobile-result-bar">
+      <strong id="mobile-count">Case studies</strong>
+      <button id="filter-trigger" class="tool-button" type="button" aria-expanded="false" aria-controls="filter-panel">Filters</button>
+    </div>
+    <div id="filter-backdrop" class="filter-backdrop" hidden></div>
+    <section id="filter-panel" class="filter-panel" aria-label="Filter case studies">
+      <div class="filter-drawer-head"><strong>Filter case studies</strong><button id="filter-close" type="button" aria-label="Close filters">&times;</button></div>
+      <label class="search-field"><span>Search</span><input id="q" type="search" placeholder="Location, action, or keyword"></label>
+      <label><span>Hazard</span><select id="hazard"><option value="">All hazards</option></select></label>
+      <label><span>Region</span><select id="region"><option value="">All regions</option></select></label>
+      <label><span>Location type</span><select id="location-type"><option value="">All location types</option></select></label>
+      <label><span>Theme / sector</span><select id="theme"><option value="">All themes</option></select></label>
+      <label><span>Adaptation strategy</span><select id="strategy"><option value="">All strategies</option></select></label>
+      <label><span>Implementation stage</span><select id="stage"><option value="">All stages</option></select></label>
+      <label><span>Lead organization type</span><select id="lead-type"><option value="">All lead types</option></select></label>
+      <button id="apply-filters" class="apply-filters" type="button">Show results</button>
+    </section>
+
+    <section class="results-tools" aria-label="Result controls">
+      <div><strong id="count"></strong><div id="active-filters" class="active-filters" aria-live="polite"></div></div>
+      <div class="result-actions">
+        <button id="export-csv" class="tool-button" type="button">Export filtered CSV</button>
+        <label>Sort <select id="sort"><option value="collection">Washington first</option><option value="title">Title A-Z</option><option value="review">Latest source check</option></select></label>
+      </div>
+    </section>
+
+    <section id="featured" class="featured" aria-label="Curated featured case"></section>
+    <section id="grid" class="case-grid" aria-live="polite"></section>
+    <div class="load-more-wrap"><button id="load-more" class="tool-button" type="button" hidden>Load more cases</button></div>
+
+    <section id="using-cases" class="use-guide">
+      <header><p class="eyebrow">Using the library</p><h2>Use evidence boundaries, not headlines alone.</h2><p>These records support comparison and internal discussion. Open the controlling source before reusing a claim.</p></header>
+      <div class="guide-grid">
+        <article><h3>1. Select</h3><p>Filter by hazard, geography, theme, and implementation stage. A case is a bounded action, not an entire plan or program universe.</p></article>
+        <article><h3>2. Read evidence</h3><p>Separate measured outcomes from reported or anticipated benefits. Missing evidence is shown as a limit, not silently filled.</p></article>
+        <article><h3>3. Test transferability</h3><p>Compare governance, scale, climate mechanism, implementation stage, and site constraints before applying a lesson elsewhere.</p></article>
+        <article><h3>4. Cite and correct</h3><p>Use the case citation and source link. Report broken links, inaccurate fields, or accessibility problems to the project team.</p></article>
+      </div>
+    </section>
+
+    <section id="methodology" class="methodology">
+      <div><h2>Methodology and definitions</h2><p>Cases are screened for adaptation relevance, bounded action, usable source evidence, and review needs. Inclusion in this staging library does not by itself establish effectiveness or publication approval.</p></div>
+      <dl>
+        <div><dt>Planned / pilot</dt><dd>Action is proposed, funded, designed, or being tested. Benefits must not be described as measured outcomes.</dd></div>
+        <div><dt>Implemented / operational</dt><dd>Action exists or is operating. Outcome claims still require explicit source evidence.</dd></div>
+        <div><dt>Transferability</dt><dd>Conditions under which an approach may inform another place; it is not a guarantee of equivalent results.</dd></div>
+        <div><dt>Update cycle</dt><dd>Source status and case fields are checked through a human-reviewed workflow before a new immutable snapshot is activated.</dd></div>
+      </dl>
+    </section>
+    <p id="snapshot-meta" class="snapshot-meta"></p>
+  </main>
+
+  <aside id="compare-tray" class="compare-tray" hidden aria-live="polite">
+    <div><strong>Compare cases</strong><span id="compare-summary"></span></div>
+    <div class="compare-actions"><button id="clear-compare" type="button">Clear</button><button id="open-compare" type="button">Compare selected</button></div>
+  </aside>
+
+  <div id="case-overlay" class="overlay" hidden>
+    <article id="case-detail" class="case-detail" role="dialog" aria-modal="true" aria-labelledby="detail-title" aria-describedby="detail-summary"></article>
+  </div>
+  <div id="compare-overlay" class="overlay" hidden>
+    <article id="compare-detail" class="compare-detail" role="dialog" aria-modal="true" aria-labelledby="compare-title"></article>
+  </div>
+  <div id="tour-overlay" class="overlay" hidden>
+    <section id="review-tour" class="review-tour" role="dialog" aria-modal="true" aria-labelledby="tour-title">
+      <div class="tour-head">
+        <div><p class="eyebrow">Five-step review</p><h2 id="tour-title">Try the stakeholder review path</h2></div>
+        <button id="tour-close" class="tour-close" type="button" aria-label="Close review tour">&times;</button>
+      </div>
+      <div class="tour-step" data-tour-step="0"><b>1 of 5 · Search</b><h3>Find one known case</h3><p>Use a location, adaptation action, organization, or keyword.</p></div>
+      <div class="tour-step" data-tour-step="1" hidden><b>2 of 5 · Filter</b><h3>Narrow the collection</h3><p>Apply a hazard, region, theme, or implementation-stage filter.</p></div>
+      <div class="tour-step" data-tour-step="2" hidden><b>3 of 5 · Evidence</b><h3>Open a case detail</h3><p>Check the bounded action, supported claim, limits, source health, and review status.</p></div>
+      <div class="tour-step" data-tour-step="3" hidden><b>4 of 5 · Compare</b><h3>Compare two cases</h3><p>Select two cards and compare climate mechanism, action, stage, outcomes, and limitations.</p></div>
+      <div class="tour-step" data-tour-step="4" hidden><b>5 of 5 · Reuse carefully</b><h3>Copy a citation or export CSV</h3><p>Use the controlling source before reusing any claim, then record feedback.</p></div>
+      <div class="tour-actions"><button id="tour-back" type="button">Back</button><span id="tour-status" aria-live="polite">Step 1 of 5</span><button id="tour-next" type="button">Next</button></div>
+    </section>
+  </div>
+
+  <footer class="site-footer">
+    <div><strong>CAR-WASH Case Study Library</strong><p>Human-reviewed research staging for WASCO/CIG discussion.</p></div>
+    <nav aria-label="Footer"><a href="#methodology">Methodology</a><a href="#using-cases">Accessibility and use</a><a href="mailto:cig@uw.edu">Contact</a><a href="/library">Case library</a></nav>
+    <p>Version <span id="footer-version">snapshot pending</span>. Image rights and UW deployment require separate approval.</p>
+  </footer>
+
+  <script>window.__wascoConsoleErrors=[];addEventListener('error',e=>window.__wascoConsoleErrors.push(String(e.message)));addEventListener('unhandledrejection',e=>window.__wascoConsoleErrors.push(String(e.reason)));</script>
+  <script src="/cases.js"></script>
+  <script src="/public.js"></script>
+</body>
+</html>

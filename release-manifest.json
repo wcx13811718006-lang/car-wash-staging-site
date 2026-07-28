@@ -1,0 +1,22 @@
+{
+  "schema": "car-wash-public-release-manifest-v1",
+  "snapshot_id": "staging-20260728T060801-679fa5a8",
+  "generated_at": "2026-07-28T06:08:01.961852+00:00",
+  "case_count": 1,
+  "release_profile": "PUBLIC_PILOT",
+  "asset_mode": "NO_EXTERNAL_IMAGE",
+  "approved_public_copy_hashes": {
+    "case-f1e1186726cc": "9ef6eb1cbf9daaf7c0b35d78153312955f27b994565d035d49c343a216a72403"
+  },
+  "exact_case_versions": {
+    "case-f1e1186726cc4e3e": "case-f1e1186726cc4e3e-v-74cfcc6a5fac"
+  },
+  "source_commit_sha": "0000000000000000000000000000000000000000",
+  "public_schema_version": "public-case-copy-v1",
+  "taxonomy_version": "case-taxonomy-v1",
+  "render_mode": "INTERNAL_STAGING",
+  "asset_checksums": {
+    "assets/washington-state-mount-rainier-nps.jpg": "7b82a55987c76e3db9e5d08a5eb566676eb523965b45dfd7f4cdcc85e5fb7201",
+    "assets/case-f1e1186726cc-paris-cooling.svg": "5433be3fd1ef0d2e370f2b2d84b2359202a8701141122e5ca8776033b4cad8d2"
+  }
+}
