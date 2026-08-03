@@ -7,7 +7,7 @@
   <title>CAR-WASH Climate Adaptation Case Studies</title>
   <link rel="icon" href="data:,">
   <link rel="preload" as="image" href="assets/site-hero-washington-state-mount-rainier-nps-1280.jpg" fetchpriority="high">
-  <link rel="stylesheet" href="public.css?v=staging-20260728T175739-94cb9953">
+  <link rel="stylesheet" href="public.css?v=staging-20260803T191226-99387010">
 </head>
 <body class="research-atlas">
   <a class="skip-link" href="#library">Skip to case studies</a>
@@ -82,14 +82,42 @@
     <section class="results-tools" aria-label="Result controls">
       <div><strong id="count"></strong><div id="active-filters" class="active-filters" aria-live="polite"></div></div>
       <div class="result-actions">
+        <div class="view-switcher" role="group" aria-label="Results view">
+          <button class="view-button active" type="button" data-view="grid" aria-pressed="true">Grid</button>
+          <button class="view-button" type="button" data-view="map" aria-pressed="false">Map</button>
+          <button class="view-button" type="button" data-view="compare" aria-pressed="false">Compare</button>
+        </div>
         <button id="export-csv" class="tool-button" type="button">Export filtered CSV</button>
-        <label>Sort <select id="sort"><option value="collection">Washington first</option><option value="title">Title A-Z</option><option value="review">Latest source check</option></select></label>
+        <label>Sort <select id="sort"><option value="curated">Curated order</option><option value="collection">Washington first</option><option value="title">Title A-Z</option><option value="review">Latest source check</option></select></label>
       </div>
     </section>
 
     <section id="featured" class="featured" aria-label="Curated featured case"></section>
-    <section id="grid" class="case-grid" aria-live="polite"></section>
-    <div class="load-more-wrap"><button id="load-more" class="tool-button" type="button" hidden>Load more cases</button></div>
+    <div id="grid-view">
+      <section id="grid" class="case-grid" aria-live="polite"></section>
+      <div class="load-more-wrap"><button id="load-more" class="tool-button" type="button" hidden>Load more cases</button></div>
+    </div>
+    <section id="map-view" class="map-workspace" hidden aria-labelledby="map-title">
+      <header class="map-workspace-head">
+        <div><p class="eyebrow">National case atlas</p><h2 id="map-title">Published cases, mapped by adaptation pressure</h2><p id="map-result-summary" aria-live="polite"></p></div>
+        <div class="map-layer-switch" aria-label="Map layers">
+          <button class="active" type="button" data-map-layer="cases">Published cases</button>
+          <button type="button" data-map-layer="climate">Climate context</button>
+        </div>
+      </header>
+      <div class="map-boundary"><strong>Read the layers separately.</strong> Case density shows where this library has examples; it does not show where hazards are increasing.</div>
+      <div class="map-layout">
+        <div class="map-canvas-wrap">
+          <svg id="atlas-map" class="atlas-map" viewBox="0 0 1000 520" role="group" aria-label="United States map with published CAR-WASH case locations"></svg>
+          <div id="map-hazard-legend" class="map-hazard-legend" aria-label="Hazard color legend"></div>
+        </div>
+        <aside class="map-inspector">
+          <div id="map-case-detail"></div>
+          <div id="climate-layer-note" class="climate-layer-note"></div>
+        </aside>
+      </div>
+      <div id="outside-us-cases" class="outside-us-cases" hidden></div>
+    </section>
 
     <section id="using-cases" class="use-guide">
       <header><p class="eyebrow">Using the library</p><h2>Use evidence boundaries, not headlines alone.</h2><p>These records support comparison and internal discussion. Open the controlling source before reusing a claim.</p></header>
@@ -147,7 +175,11 @@
 
   <script>window.__wascoConsoleErrors=[];addEventListener('error',e=>window.__wascoConsoleErrors.push(String(e.message)));addEventListener('unhandledrejection',e=>window.__wascoConsoleErrors.push(String(e.reason)));</script>
   <script>window.CAR_WASH_STATIC_SNAPSHOT=true;</script>
-  <script src="cases.js?v=staging-20260728T175739-94cb9953"></script>
-  <script src="public.js?v=staging-20260728T175739-94cb9953"></script>
+  <script src="cases.js?v=staging-20260803T191226-99387010"></script>
+  <script src="us-states.js?v=staging-20260803T191226-99387010"></script>
+  <script src="map-cases.js?v=staging-20260803T191226-99387010"></script>
+  <script src="climate-context.js?v=staging-20260803T191226-99387010"></script>
+  <script src="public-map.js?v=staging-20260803T191226-99387010"></script>
+  <script src="public.js?v=staging-20260803T191226-99387010"></script>
 </body>
 </html>

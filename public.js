@@ -49,6 +49,7 @@
   let filteredRows = [];
   let originCard = null;
   const compared = new Set();
+  let resultView = initialParams.get("view") === "map" ? "map" : "grid";
   const cardExcerptLength = layoutMode === "compact" ? 92 : layoutMode === "reading" ? 250 : 156;
   const featuredExcerptLength = layoutMode === "compact" ? 145 : layoutMode === "reading" ? 290 : 210;
 
@@ -65,7 +66,7 @@
   function readUrlState() {
     const params = new URLSearchParams(location.search);
     activeCollection = params.get("collection") || "";
-    Object.entries(controls).forEach(([key, control]) => { control.value = params.get(key) || (key === "sort" ? "collection" : ""); });
+    Object.entries(controls).forEach(([key, control]) => { control.value = params.get(key) || (key === "sort" ? "curated" : ""); });
     const limit = Number(params.get("limit"));
     if (Number.isInteger(limit) && limit > 0 && limit <= 100) visibleLimit = limit;
     $$(".tab").forEach(tab => tab.classList.toggle("active", tab.dataset.collection === activeCollection));
@@ -76,7 +77,8 @@
     if (layoutMode !== "standard") params.set("layout", layoutMode);
     if (previewMode) params.set("preview", "1");
     if (activeCollection) params.set("collection", activeCollection);
-    Object.entries(controls).forEach(([key, control]) => { const value = control.value.trim(); if (value && !(key === "sort" && value === "collection")) params.set(key, value); });
+    if (resultView !== "grid") params.set("view", resultView);
+    Object.entries(controls).forEach(([key, control]) => { const value = control.value.trim(); if (value && !(key === "sort" && value === "curated")) params.set(key, value); });
     if (visibleLimit !== (matchMedia("(max-width: 719px)").matches ? 6 : 12)) params.set("limit", String(visibleLimit));
     const query = params.size ? `?${params}` : "";
     return fileMode ? `${location.pathname}${query}` : `/library${query}`;
@@ -136,7 +138,7 @@
   function card(item) {
     const fields = matchedFields(item);
     const checked = compared.has(item.public_id);
-    return `<article class="case-card" data-case-id="${esc(item.public_id)}"><a class="card-image-link open-case" data-case-slug="${esc(slug(item))}" href="${caseHref(item)}" aria-label="Open ${esc(normalize(item.title))}">${picture(item)}<span class="image-action">View case</span></a><div class="card-copy"><p class="collection-label">${esc(normalize(item.collection))}</p>${tags(item)}<h2><a class="open-case" data-case-slug="${esc(slug(item))}" href="${caseHref(item)}">${esc(normalize(item.title))}</a></h2><p class="place">${esc(clean(item.location || item.region) || "Location pending review")}</p>${fields.length ? `<p class="match-note">Matched: ${esc(fields.join(", "))}</p>` : ""}<div class="card-overview"><b>Case overview</b><p>${esc(excerpt(item.summary, cardExcerptLength))}</p></div><div class="card-meta"><span><b>Implementation</b>${esc(stage(item))}</span><span><b>Source checked</b>${esc(sourceDate(item))}</span></div><label class="compare-check"><input type="checkbox" data-compare="${esc(item.public_id)}" ${checked ? "checked" : ""}> Compare</label></div></article>`;
+    return `<article class="case-card ${item.preview_target ? "preview-target" : ""}" data-case-id="${esc(item.public_id)}" data-preview-target="${item.preview_target ? "true" : "false"}"><a class="card-image-link open-case" data-case-slug="${esc(slug(item))}" href="${caseHref(item)}" aria-label="Open ${esc(normalize(item.title))}">${picture(item)}<span class="image-action">View case</span></a><div class="card-copy"><p class="collection-label">${esc(normalize(item.collection))}</p>${tags(item)}<h2><a class="open-case" data-case-slug="${esc(slug(item))}" href="${caseHref(item)}">${esc(normalize(item.title))}</a></h2><p class="place">${esc(clean(item.location || item.region) || "Location pending review")}</p>${fields.length ? `<p class="match-note">Matched: ${esc(fields.join(", "))}</p>` : ""}<div class="card-overview"><b>Case overview</b><p>${esc(excerpt(item.summary, cardExcerptLength))}</p></div><div class="card-meta"><span><b>Implementation</b>${esc(stage(item))}</span><span><b>Source checked</b>${esc(sourceDate(item))}</span></div><label class="compare-check"><input type="checkbox" data-compare="${esc(item.public_id)}" ${checked ? "checked" : ""}> Compare</label></div></article>`;
   }
 
   function chips() {
@@ -156,6 +158,7 @@
   function draw({syncUrl = true} = {}) {
     const primary = meta.primary_collection || "Washington and Pacific Northwest";
     filteredRows = cases.filter(matches).sort((a, b) => {
+      if (controls.sort.value === "curated") return Number(a.display_order ?? 9999) - Number(b.display_order ?? 9999);
       if (controls.sort.value === "title") return normalize(a.title).localeCompare(normalize(b.title));
       if (controls.sort.value === "review") return sourceDate(b).localeCompare(sourceDate(a));
       const order = Number(b.collection === primary) - Number(a.collection === primary);
@@ -171,7 +174,29 @@
     chips();
     wireCaseAnchors();
     wireCompareChecks();
+    window.CAR_WASH_MAP?.render(filteredRows);
     if (syncUrl) updateListUrl();
+  }
+
+  function setResultView(view) {
+    if (view === "compare") {
+      resultView = "grid";
+      document.body.classList.add("compare-select-mode");
+      document.querySelector("#grid-view")?.scrollIntoView({behavior:"smooth", block:"start"});
+    } else {
+      resultView = view === "map" ? "map" : "grid";
+      document.body.classList.remove("compare-select-mode");
+    }
+    $("#grid-view").hidden = resultView === "map";
+    $("#map-view").hidden = resultView !== "map";
+    $("#featured").hidden = resultView === "map";
+    $$("[data-view]").forEach(button => {
+      const active = button.dataset.view === resultView || (button.dataset.view === "compare" && document.body.classList.contains("compare-select-mode"));
+      button.classList.toggle("active", active);
+      button.setAttribute("aria-pressed", String(active));
+    });
+    window.CAR_WASH_MAP?.render(filteredRows);
+    updateListUrl();
   }
 
   function focusables(container) { return [...container.querySelectorAll('a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])')].filter(node => !node.hidden); }
@@ -273,7 +298,7 @@
   function openCompare() {
     const selected = [...compared].map(id => cases.find(item => item.public_id === id)).filter(Boolean);
     if (selected.length < 2) return;
-    const rows = [["Location", item => item.location || item.region], ["Hazards", item => arr(item.hazards).join(", ")], ["Climate mechanism", item => item.climate_mechanism], ["Adaptation action", item => item.adaptation_action], ["Stage", stage], ["Reported outcomes", item => arr(item.outcomes).join(" ")], ["Transferability", item => item.transferability], ["Evidence limits", item => item.limitations], ["Source check", sourceDate]];
+    const rows = [["Place and setting", item => item.location || item.region], ["Climate pressure", item => item.climate_mechanism || arr(item.hazards).join(", ")], ["Adaptation response", item => item.adaptation_action], ["Implementation stage", stage], ["Evidence available", item => item.reported_outcomes || arr(item.outcomes).join(" ")], ["What may transfer", item => item.transferability], ["Important limits", item => item.limitations], ["Source status", sourceDate]];
     $("#compare-detail").innerHTML = `<div class="compare-head"><div><p class="eyebrow">Research utility</p><h2 id="compare-title">Compare selected cases</h2></div><button class="close" type="button" aria-label="Close comparison">&times;</button></div><div class="compare-table-wrap"><table class="compare-table"><thead><tr><th>Field</th>${selected.map(item => `<th>${esc(item.title)}</th>`).join("")}</tr></thead><tbody>${rows.map(([label, getter]) => `<tr><th>${esc(label)}</th>${selected.map(item => `<td>${esc(normalize(getter(item)) || "Not recorded")}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
     $("#compare-overlay").hidden = false; setPageInert(true); $("#compare-detail .close").focus(); $("#compare-detail .close").addEventListener("click", closeCompare);
   }
@@ -296,6 +321,25 @@
     else if (!$("#case-overlay").hidden) closeCase({useHistory:false});
   }
 
+  function locatePreviewTarget() {
+    if (!previewMode) return;
+    const item = cases.find(candidate => candidate.preview_target);
+    const card = document.querySelector('[data-preview-target="true"]');
+    if (!item || !card) return;
+    const position = cases
+      .slice()
+      .sort((a, b) => Number(a.display_order ?? 9999) - Number(b.display_order ?? 9999))
+      .findIndex(candidate => candidate.public_id === item.public_id) + 1;
+    const bar = document.createElement("div");
+    bar.className = "preview-locator";
+    bar.innerHTML = `<strong>Current draft · position ${position} of ${cases.length}</strong><button type="button" data-jump-preview>Jump to edited case</button><button type="button" data-open-preview>Open edited case</button>`;
+    document.body.append(bar);
+    const jump = () => card.scrollIntoView({behavior:"smooth", block:"center"});
+    bar.querySelector("[data-jump-preview]").addEventListener("click", jump);
+    bar.querySelector("[data-open-preview]").addEventListener("click", () => openCase(item, {push:true, trigger:card.querySelector(".open-case")}));
+    requestAnimationFrame(jump);
+  }
+
   let tourStep = 0;
   function showTourStep(index) {
     tourStep = Math.max(0, Math.min(4, index));
@@ -312,6 +356,11 @@
   $$(".tab").forEach(tab => tab.addEventListener("click", () => { activeCollection = tab.dataset.collection; $$(".tab").forEach(item => item.classList.toggle("active", item === tab)); visibleLimit = matchMedia("(max-width: 719px)").matches ? 6 : 27; draw(); }));
   $("#load-more").addEventListener("click", () => { visibleLimit += matchMedia("(max-width: 719px)").matches ? 6 : 12; draw(); });
   $("#export-csv").addEventListener("click", exportCsv);
+  $$("[data-view]").forEach(button => button.addEventListener("click", () => setResultView(button.dataset.view)));
+  document.addEventListener("carwash:open-case", event => {
+    const item = cases.find(candidate => candidate.public_id === event.detail?.publicId);
+    if (item) openCase(item, {push:true, trigger:document.querySelector(`[data-map-case="${CSS.escape(item.public_id)}"]`)});
+  });
   $("#filter-trigger").addEventListener("click", openFilters); $("#filter-close").addEventListener("click", closeFilters); $("#filter-backdrop").addEventListener("click", closeFilters); $("#apply-filters").addEventListener("click", closeFilters);
   $("#case-overlay").addEventListener("click", event => { if (event.target.id === "case-overlay") closeCase(); });
   $("#compare-overlay").addEventListener("click", event => { if (event.target.id === "compare-overlay") closeCompare(); });
@@ -339,5 +388,5 @@
     : `${previewMode ? "Local website preview" : "Internal staging snapshot"} ${meta.snapshot_id || meta.dataset_version || "pending"}. No public-use approval is implied.`;
   $("#footer-version").textContent = meta.snapshot_id || meta.dataset_version || "pending";
   $("#hero-case-count").textContent = String(cases.length);
-  readUrlState(); drawFeatured(); draw({syncUrl:false}); wireCaseAnchors(); routeFromLocation();
+  window.CAR_WASH_MAP?.init(); readUrlState(); drawFeatured(); draw({syncUrl:false}); setResultView(resultView); wireCaseAnchors(); routeFromLocation(); locatePreviewTarget();
 })();

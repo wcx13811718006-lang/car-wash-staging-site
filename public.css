@@ -403,6 +403,39 @@ body.website-preview .prototype-label::before {
   font-weight: 900;
   letter-spacing: .08em;
 }
+.case-card.preview-target {
+  outline: 4px solid #f0b429;
+  outline-offset: 4px;
+  box-shadow: 0 18px 45px rgba(122, 74, 0, .22);
+}
+.preview-locator {
+  position: fixed;
+  z-index: 80;
+  right: 24px;
+  bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  color: #fff;
+  background: #14213a;
+  border: 1px solid rgba(255,255,255,.22);
+  box-shadow: 0 16px 40px rgba(12, 24, 45, .28);
+}
+.preview-locator button {
+  min-height: 38px;
+  padding: 8px 12px;
+  border: 1px solid rgba(255,255,255,.45);
+  color: #fff;
+  background: transparent;
+  cursor: pointer;
+}
+@media (max-width: 719px) {
+  .preview-locator { left: 12px; right: 12px; bottom: 12px; flex-wrap: wrap; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}
 
 body.layout-compact .research-atlas-hero {
   min-height: 330px;
@@ -640,6 +673,143 @@ body.layout-reading .card-overview p {
 .site-footer nav { display: flex; flex-wrap: wrap; gap: 18px; }
 .site-footer a { color: #fff; }
 .site-footer > p { grid-column: 1/-1; border-top: 1px solid #304956; padding-top: 15px; }
+
+.view-switcher {
+  display: inline-flex;
+  border: 1px solid #bdccd2;
+  background: #fff;
+}
+.view-button {
+  min-width: 70px;
+  min-height: 40px;
+  padding: 8px 12px;
+  border: 0;
+  border-right: 1px solid #d5e0e4;
+  background: transparent;
+  color: #485d6a;
+  font-weight: 800;
+  cursor: pointer;
+}
+.view-button:last-child { border-right: 0; }
+.view-button.active { background: var(--ink); color: #fff; }
+.compare-select-mode .compare-check { outline: 2px solid #9cc9bb; outline-offset: 4px; }
+
+.map-workspace {
+  margin: 24px 0 58px;
+  border-top: 4px solid var(--green);
+  background: #fff;
+  box-shadow: var(--shadow-sm);
+}
+.map-workspace[hidden] { display: none; }
+.map-workspace-head {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 30px;
+  padding: 28px 32px 22px;
+  border-bottom: 1px solid var(--line);
+}
+.map-workspace-head h2 { margin: 0; font: 700 34px/1.1 var(--serif); }
+.map-workspace-head p:last-child { margin: 8px 0 0; color: var(--muted); }
+.map-layer-switch { display: inline-flex; flex: 0 0 auto; border: 1px solid #bdccd2; }
+.map-layer-switch button {
+  min-height: 42px;
+  padding: 8px 14px;
+  border: 0;
+  border-right: 1px solid #bdccd2;
+  background: #fff;
+  color: #405765;
+  font-weight: 800;
+  cursor: pointer;
+}
+.map-layer-switch button:last-child { border-right: 0; }
+.map-layer-switch button.active { background: var(--green-soft); color: #19523f; }
+.map-boundary {
+  padding: 11px 32px;
+  background: #eef3f1;
+  color: #456058;
+  font-size: 13px;
+}
+.map-layout { display: grid; grid-template-columns: minmax(0, 1.9fr) minmax(280px, .72fr); min-height: 570px; }
+.map-canvas-wrap {
+  min-width: 0;
+  padding: 24px 22px 18px;
+  background:
+    linear-gradient(rgba(226,238,240,.52) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(226,238,240,.52) 1px, transparent 1px),
+    #f7faf9;
+  background-size: 34px 34px;
+  border-right: 1px solid var(--line);
+}
+.atlas-map { display: block; width: 100%; min-height: 440px; }
+.atlas-state {
+  fill: #dde8e6;
+  stroke: #fff;
+  stroke-width: 1.15;
+  vector-effect: non-scaling-stroke;
+}
+.atlas-state:hover { fill: #d0dedb; }
+.map-labels text { fill: #667b83; font: 700 10px var(--sans); letter-spacing: 0; }
+.atlas-marker { cursor: pointer; outline: none; }
+.marker-halo { fill: #fff; fill-opacity: .78; stroke: #163c49; stroke-opacity: .22; stroke-width: 1; }
+.marker-core { stroke: #fff; stroke-width: 2.2; vector-effect: non-scaling-stroke; }
+.atlas-marker:hover .marker-halo, .atlas-marker:focus-visible .marker-halo, .atlas-marker.is-selected .marker-halo {
+  fill: #cce9df;
+  fill-opacity: .92;
+  stroke: #173c46;
+  stroke-width: 2;
+}
+.map-hazard-legend { display: flex; flex-wrap: wrap; gap: 8px 16px; padding: 4px 8px 0; }
+.map-hazard-legend span { display: inline-flex; align-items: center; gap: 6px; color: #4b606b; font-size: 11px; }
+.map-hazard-legend i { width: 9px; height: 9px; border-radius: 50%; box-shadow: 0 0 0 2px #fff, 0 0 0 3px #b9c9cc; }
+.map-hazard-legend [data-hazard="COASTAL_FLOODING_EROSION"] i { background: #147d92; }
+.map-hazard-legend [data-hazard="RIVER_FLOODING_STORMWATER"] i { background: #2563a6; }
+.map-hazard-legend [data-hazard="EXTREME_HEAT_SMOKE"] i { background: #c44a35; }
+.map-hazard-legend [data-hazard="WILDFIRE_FOREST"] i { background: #d97724; }
+.map-hazard-legend [data-hazard="DROUGHT_WATER_SUPPLY"] i { background: #7656a5; }
+.map-hazard-legend [data-hazard="ECOSYSTEM_HABITAT"] i { background: #398b64; }
+.map-hazard-legend [data-hazard="LANDSLIDE_GEOLOGIC"] i { background: #8a6642; }
+.map-hazard-legend [data-hazard="MULTI_HAZARD_GOVERNANCE"] i { background: #5d6570; }
+.map-hazard-legend [data-hazard="OTHER_ADAPTATION"] i { background: #7a8492; }
+.map-inspector { padding: 30px; background: #fff; }
+.map-detail-empty { margin: 0; color: var(--muted); font: 700 18px/1.5 var(--serif); }
+#map-case-detail h3 { margin: 0 0 5px; font: 700 27px/1.15 var(--serif); }
+#map-case-detail > p:not(.eyebrow):not(.map-place) { color: #455a67; line-height: 1.65; }
+.map-place { margin: 0 0 18px; color: var(--green); font-weight: 800; }
+#map-case-detail dl { margin: 22px 0; border-top: 1px solid var(--line); }
+#map-case-detail dl div { display: grid; grid-template-columns: 115px 1fr; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--line); }
+#map-case-detail dt { color: #677984; font-size: 11px; font-weight: 800; text-transform: uppercase; }
+#map-case-detail dd { margin: 0; color: #304653; font-size: 13px; }
+.map-open-case {
+  width: 100%;
+  min-height: 44px;
+  border: 0;
+  background: var(--purple);
+  color: #fff;
+  font-weight: 800;
+  cursor: pointer;
+}
+.climate-layer-note { margin-top: 30px; padding-top: 20px; border-top: 1px solid var(--line); }
+.map-workspace.show-climate-reference .climate-layer-note { margin-inline: -12px; padding: 18px 12px; border: 2px solid #8db8c5; background: #edf6f7; }
+.map-workspace.show-climate-reference .atlas-state { fill: #d6e4e6; }
+.climate-layer-note strong { color: #234e62; }
+.climate-layer-note p { color: #61727d; font-size: 13px; }
+.climate-layer-note a { color: var(--purple); font-weight: 800; }
+.outside-us-cases { padding: 22px 32px 30px; border-top: 1px solid var(--line); }
+.outside-us-cases h3 { margin: 0 0 12px; font: 700 20px/1.2 var(--serif); }
+.outside-us-cases button {
+  display: inline-grid;
+  gap: 3px;
+  max-width: 300px;
+  margin: 0 9px 9px 0;
+  padding: 11px 13px;
+  border: 1px solid #c8d5d8;
+  background: #fff;
+  color: var(--ink);
+  text-align: left;
+  cursor: pointer;
+}
+.outside-us-cases span { color: var(--muted); font-size: 12px; }
 body.modal-open, body.drawer-open { overflow: hidden; }
 body.modal-open main, body.modal-open .site-header, body.modal-open .hero, body.modal-open .site-footer {
   pointer-events: none;
@@ -663,6 +833,8 @@ body.modal-open main, body.modal-open .site-header, body.modal-open .hero, body.
   .detail-body { grid-template-columns: 1fr; }
   .fact-list { padding-left: 0; border-left: 0; border-top: 1px solid var(--line); }
   .use-guide > header, .methodology { grid-template-columns: 1fr; }
+  .map-layout { grid-template-columns: 1fr; }
+  .map-canvas-wrap { border-right: 0; border-bottom: 1px solid var(--line); }
 }
 
 @media (max-width: 719px) {
@@ -718,6 +890,17 @@ body.modal-open main, body.modal-open .site-header, body.modal-open .hero, body.
   .apply-filters { display: block; margin-top: auto; background: var(--purple); color: #fff; }
   .results-tools { display: grid; }
   .result-actions { justify-content: space-between; flex-wrap: wrap; }
+  .view-switcher { width: 100%; }
+  .view-button { flex: 1; }
+  .map-workspace-head { display: grid; padding: 23px 18px 18px; }
+  .map-workspace-head h2 { font-size: 28px; }
+  .map-layer-switch { width: 100%; }
+  .map-layer-switch button { flex: 1; }
+  .map-boundary { padding: 11px 18px; }
+  .map-canvas-wrap { padding: 10px 5px; overflow-x: auto; }
+  .atlas-map { min-width: 690px; min-height: 370px; }
+  .map-inspector { padding: 23px 18px; }
+  .outside-us-cases { padding: 20px 18px; }
   .case-grid{grid-template-columns:1fr}
   .case-card img { height: 220px; }
   .image-action { opacity: 1; transform: none; }
