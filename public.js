@@ -2,6 +2,8 @@
   "use strict";
   const cases = window.CAR_WASH_CASES || [];
   const meta = window.CAR_WASH_META || {};
+  const siteCopy = meta.site_copy || {};
+  const siteText = (key, fallback) => clean(siteCopy[key]) || fallback;
   const assetVersion = encodeURIComponent(meta.snapshot_id || meta.dataset_version || "staging");
   const fileMode = location.protocol === "file:" || window.CAR_WASH_STATIC_SNAPSHOT === true;
   const initialParams = new URLSearchParams(location.search);
@@ -16,12 +18,25 @@
   const esc = value => String(value ?? "").replace(/[&<>"']/g, char => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[char]));
   const clean = value => { const text = String(value ?? "").trim(); return /^not recorded|^not_recorded/i.test(text) ? "" : text; };
   const normalize = value => String(value ?? "").replace(/Impliment/gi, "Implement").replace(/efficency/gi, "efficiency").replace(/risk reductionwith/gi, "risk reduction with").replace(/,\s*/g, ", ").replace(/\s*→\s*/g, " to ").trim();
+  const publicLabels = {
+    MONITORING_DATA_EARLY_WARNING:"Data, monitoring, and early warning",
+    NATURE_BASED_RESTORATION_GREEN_INFRASTRUCTURE:"Nature-based restoration and green infrastructure",
+    BUILT_INFRASTRUCTURE_RETROFIT:"Built infrastructure and facility retrofit",
+    EMERGENCY_PREPAREDNESS_RESPONSE:"Emergency preparedness and response",
+    RELOCATION_MANAGED_RETREAT:"Relocation and managed retreat",
+    COMMUNITY_ENGAGEMENT_CAPACITY_BUILDING:"Community engagement and capacity building",
+    FINANCIAL_PROGRAM_INCENTIVE:"Financial programs and incentives",
+    ASSESSMENT_PLANNING:"Assessment and planning",
+    POLICY_GOVERNANCE:"Policy and governance",
+  };
+  const label = value => publicLabels[String(value || "").toUpperCase()] || normalize(value).replaceAll("_", " ").toLowerCase().replace(/^./, char => char.toUpperCase());
+  const stageGroups = {ASSESS:"Planning and design",PLAN:"Planning and design",DESIGN:"Planning and design",PLANNING:"Planning and design",PILOT:"Pilot",IMPLEMENT:"Implementation",IMPLEMENTING:"Implementation",IMPLEMENTED:"Implementation","COMPLETED / OPERATIONAL":"Implementation",MONITOR:"Monitoring and adaptive management",EVALUATE:"Monitoring and adaptive management",ADAPT:"Monitoring and adaptive management","MONITORING / ADAPTIVE MANAGEMENT":"Monitoring and adaptive management"};
   const excerpt = (value, max = 150) => { const text = normalize(value).replace(/\s+/g, " "); return text.length > max ? `${text.slice(0, max).replace(/\s+\S*$/, "")}...` : text; };
   const arr = value => Array.isArray(value) ? value.filter(Boolean) : (value ? [value] : []);
   const assetPath = filename => `${fileMode ? "assets" : "/assets"}/${encodeURIComponent(filename)}?v=${assetVersion}`;
   const image = item => assetPath(item.asset_filename);
-  const stage = item => clean(normalize(item.implementation_stage || item.project_date)) || "Stage pending review";
-  const sourceDate = item => clean(item.last_source_checked_at) || "Source check pending";
+  const stage = item => { const raw = clean(normalize(item.implementation_stage || item.project_date)); return stageGroups[raw.toUpperCase()] || label(raw) || "Stage not specified"; };
+  const sourceDate = item => { const raw = clean(item.last_source_checked_at); const match = raw.match(/^\d{4}-\d{2}-\d{2}/); return match ? match[0] : "Not yet checked"; };
   const slug = item => item.slug || item.public_id;
   const casePath = item => fileMode ? `#case=${encodeURIComponent(slug(item))}` : `/library/cases/${encodeURIComponent(slug(item))}`;
   const caseBySlug = value => cases.find(item => slug(item) === value || item.public_id === value);
@@ -48,20 +63,19 @@
   let visibleLimit = matchMedia("(max-width: 719px)").matches ? 6 : 27;
   let filteredRows = [];
   let originCard = null;
-  const compared = new Set();
   let resultView = initialParams.get("view") === "map" ? "map" : "grid";
   const cardExcerptLength = layoutMode === "compact" ? 92 : layoutMode === "reading" ? 250 : 156;
   const featuredExcerptLength = layoutMode === "compact" ? 145 : layoutMode === "reading" ? 290 : 210;
 
-  function populate(select, options) { options.forEach(value => select.insertAdjacentHTML("beforeend", `<option value="${esc(value)}">${esc(value)}</option>`)); }
+  function populate(select, options, formatter = value => value) { options.forEach(value => select.insertAdjacentHTML("beforeend", `<option value="${esc(value)}">${esc(formatter(value))}</option>`)); }
   function values(key) { return [...new Set(cases.flatMap(item => arr(item[key])).map(normalize).filter(Boolean))].sort(); }
-  populate(controls.hazard, values("hazards"));
-  populate(controls.region, values("region_tags"));
-  populate(controls.location_type, values("location_types"));
-  populate(controls.theme, values("themes"));
-  populate(controls.strategy, values("adaptation_strategies"));
+  populate(controls.hazard, values("hazards"), label);
+  populate(controls.region, values("region_tags"), label);
+  populate(controls.location_type, values("location_types"), label);
+  populate(controls.theme, values("themes"), label);
+  populate(controls.strategy, values("adaptation_strategies"), label);
   populate(controls.stage, [...new Set(cases.map(stage))].sort());
-  populate(controls.lead_type, values("lead_organization_types"));
+  populate(controls.lead_type, values("lead_organization_types"), label);
 
   function readUrlState() {
     const params = new URLSearchParams(location.search);
@@ -137,8 +151,7 @@
 
   function card(item) {
     const fields = matchedFields(item);
-    const checked = compared.has(item.public_id);
-    return `<article class="case-card ${item.preview_target ? "preview-target" : ""}" data-case-id="${esc(item.public_id)}" data-preview-target="${item.preview_target ? "true" : "false"}"><a class="card-image-link open-case" data-case-slug="${esc(slug(item))}" href="${caseHref(item)}" aria-label="Open ${esc(normalize(item.title))}">${picture(item)}<span class="image-action">View case</span></a><div class="card-copy"><p class="collection-label">${esc(normalize(item.collection))}</p>${tags(item)}<h2><a class="open-case" data-case-slug="${esc(slug(item))}" href="${caseHref(item)}">${esc(normalize(item.title))}</a></h2><p class="place">${esc(clean(item.location || item.region) || "Location pending review")}</p>${fields.length ? `<p class="match-note">Matched: ${esc(fields.join(", "))}</p>` : ""}<div class="card-overview"><b>Case overview</b><p>${esc(excerpt(item.summary, cardExcerptLength))}</p></div><div class="card-meta"><span><b>Implementation</b>${esc(stage(item))}</span><span><b>Source checked</b>${esc(sourceDate(item))}</span></div><label class="compare-check"><input type="checkbox" data-compare="${esc(item.public_id)}" ${checked ? "checked" : ""}> Compare</label></div></article>`;
+    return `<article class="case-card ${item.preview_target ? "preview-target" : ""}" data-case-id="${esc(item.public_id)}" data-preview-target="${item.preview_target ? "true" : "false"}"><a class="card-image-link open-case" data-case-slug="${esc(slug(item))}" href="${caseHref(item)}" aria-label="Open ${esc(normalize(item.title))}">${picture(item)}<span class="image-action">View case</span></a><div class="card-copy"><p class="collection-label">${esc(normalize(item.collection))}</p>${tags(item)}<h2><a class="open-case" data-case-slug="${esc(slug(item))}" href="${caseHref(item)}">${esc(normalize(item.title))}</a></h2><p class="place">${esc(clean(item.location || item.region) || "Location pending review")}</p>${fields.length ? `<p class="match-note">Matched: ${esc(fields.join(", "))}</p>` : ""}<div class="card-overview"><b>Case overview</b><p>${esc(excerpt(item.summary, cardExcerptLength))}</p></div><div class="card-meta"><span><b>Implementation</b>${esc(stage(item))}</span><span><b>${esc(siteText("source_date_label", "Source checked"))}</b>${esc(sourceDate(item))}</span></div></div></article>`;
   }
 
   function chips() {
@@ -173,25 +186,17 @@
     $("#load-more").textContent = `Load more (${filteredRows.length - visibleLimit} remaining)`;
     chips();
     wireCaseAnchors();
-    wireCompareChecks();
     window.CAR_WASH_MAP?.render(filteredRows);
     if (syncUrl) updateListUrl();
   }
 
   function setResultView(view) {
-    if (view === "compare") {
-      resultView = "grid";
-      document.body.classList.add("compare-select-mode");
-      document.querySelector("#grid-view")?.scrollIntoView({behavior:"smooth", block:"start"});
-    } else {
-      resultView = view === "map" ? "map" : "grid";
-      document.body.classList.remove("compare-select-mode");
-    }
+    resultView = view === "map" ? "map" : "grid";
     $("#grid-view").hidden = resultView === "map";
     $("#map-view").hidden = resultView !== "map";
     $("#featured").hidden = resultView === "map";
     $$("[data-view]").forEach(button => {
-      const active = button.dataset.view === resultView || (button.dataset.view === "compare" && document.body.classList.contains("compare-select-mode"));
+      const active = button.dataset.view === resultView;
       button.classList.toggle("active", active);
       button.setAttribute("aria-pressed", String(active));
     });
@@ -209,13 +214,13 @@
   }
 
   function setPageInert(value) {
-    [$(".prototype-label"), $(".site-header"), $(".hero"), $("main"), $(".site-footer"), $("#compare-tray")].forEach(element => { if (!element) return; element.inert = value; if (value) element.setAttribute("aria-hidden", "true"); else element.removeAttribute("aria-hidden"); });
+    [$(".prototype-label"), $(".site-header"), $(".hero"), $("main"), $(".site-footer")].forEach(element => { if (!element) return; element.inert = value; if (value) element.setAttribute("aria-hidden", "true"); else element.removeAttribute("aria-hidden"); });
     document.body.classList.toggle("modal-open", value);
   }
 
   function citation(item) {
     const checked = clean(item.last_source_checked_at) || "source check pending";
-    return `CAR-WASH. “${normalize(item.title)}.” Climate Adaptation Case Studies, ${normalize(item.collection)}. Source checked ${checked}. ${new URL(caseHref(item), location.href).href}`;
+    return `CAR-WASH. “${normalize(item.title)}.” Climate Adaptation Case Studies, ${normalize(item.collection)}. ${siteText("source_date_label", "Source checked")} ${checked}. ${new URL(caseHref(item), location.href).href}`;
   }
 
   async function copyText(value, status) {
@@ -244,14 +249,9 @@
       ["Climate context", item.climate_mechanism],
       ["Transferability", item.transferability],
     ].filter(([, value]) => normalize(value));
-    const production = meta.render_mode === "PUBLIC_PRODUCTION";
-    const facts = [["Place", item.location || item.region], ["Hazards", arr(item.hazards).join(", ")], ["Location type", arr(item.location_types).join(", ")], ["Sector", arr(item.themes).join(", ")], ["Adaptation strategy", arr(item.adaptation_strategies).join(", ")], ["Implementation stage", stage(item)], ["Lead organization", item.lead_organization], ["Partners", arr(item.partners).join(", ")], ["Last source check", clean(item.last_source_checked_at)], ["Image credit", item.asset_attribution]].filter(([, value]) => normalize(value));
-    if (!production) {
-      facts.push(["Public-copy status", item.public_copy_status || "Not recorded"]);
-      facts.push(["Image rights", item.asset_rights_status || "Not recorded"]);
-    }
+    const facts = [["Place", item.location || item.region], ["Hazards", arr(item.hazards).map(label).join(", ")], ["Location type", arr(item.location_types).map(label).join(", ")], ["Sector", arr(item.themes).map(label).join(", ")], ["Adaptation strategy", arr(item.adaptation_strategies).map(label).join(", ")], ["Implementation stage", stage(item)], ["Lead organization", item.lead_organization], ["Partners", arr(item.partners).join(", ")], [siteText("source_date_label", "Source checked"), sourceDate(item)], ["Image credit", item.asset_attribution]].filter(([, value]) => normalize(value));
     const related = relatedCases(item);
-    detail.innerHTML = `<div class="detail-hero">${picture(item, {eager:true})}<button class="close" type="button" aria-label="Close case">&times;</button><div class="detail-title">${tags(item)}<h2 id="detail-title">${esc(normalize(item.title))}</h2><p>${esc(clean(item.location || item.region) || "Location pending review")}</p></div></div><div class="detail-utility"><button data-copy-link type="button">Copy permalink</button><button data-copy-citation type="button">Copy citation</button><button data-print type="button">Print case</button><span class="utility-status" role="status"></span></div><div class="detail-body"><div class="detail-narrative">${main.map(([label,value], index) => `<section class="${index === 0 ? "detail-lede" : ""}"><h3>${esc(label)}</h3><p${index === 0 ? ' id="detail-summary"' : ""}>${esc(normalize(value))}</p></section>`).join("")}<a class="source-link" href="${esc(item.source_url)}" target="_blank" rel="noopener">Open cited public source <span aria-hidden="true">&rarr;</span></a>${related.length ? `<section class="related"><h3>Related cases</h3>${related.map(candidate => `<a class="related-link" href="${caseHref(candidate)}" data-related="${esc(slug(candidate))}">${esc(candidate.title)}</a>`).join("")}</section>` : ""}</div><aside class="fact-list">${facts.map(([label,value]) => `<div class="fact"><b>${esc(label)}</b>${esc(normalize(value))}</div>`).join("")}</aside></div>`;
+    detail.innerHTML = `<div class="detail-hero">${picture(item, {eager:true})}<button class="close" type="button" aria-label="Close case">&times;</button><div class="detail-title">${tags(item)}<h2 id="detail-title">${esc(normalize(item.title))}</h2><p>${esc(clean(item.location || item.region) || "Location pending review")}</p></div></div><div class="detail-utility"><button data-copy-link type="button">Copy permalink</button><button data-copy-citation type="button">Copy citation</button><button data-print type="button">Print case</button><span class="utility-status" role="status"></span></div><div class="detail-body"><div class="detail-narrative">${main.map(([label,value], index) => `<section class="${index === 0 ? "detail-lede" : ""}"><h3>${esc(label)}</h3><p${index === 0 ? ' id="detail-summary"' : ""}>${esc(normalize(value))}</p></section>`).join("")}<a class="source-link" href="${esc(item.source_url)}" target="_blank" rel="noopener">${esc(siteText("original_source_label", "Open original source"))} <span aria-hidden="true">&rarr;</span></a>${related.length ? `<section class="related"><h3>Related cases</h3>${related.map(candidate => `<a class="related-link" href="${caseHref(candidate)}" data-related="${esc(slug(candidate))}">${esc(candidate.title)}</a>`).join("")}</section>` : ""}</div><aside class="fact-list">${facts.map(([label,value]) => `<div class="fact"><b>${esc(label)}</b>${esc(normalize(value))}</div>`).join("")}</aside></div>`;
     const overlay = $("#case-overlay");
     overlay.hidden = false;
     overlay.classList.add("is-entering");
@@ -282,27 +282,6 @@
   function wireCaseAnchors() {
     $$("a.open-case").forEach(link => link.addEventListener("click", event => { if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return; const item = caseBySlug(link.dataset.caseSlug); if (!item) return; event.preventDefault(); openCase(item, {push:true, trigger:link}); }));
   }
-
-  function updateCompareTray() {
-    $("#compare-tray").hidden = compared.size === 0;
-    $("#compare-summary").textContent = `${compared.size} of 3 selected`;
-    $("#open-compare").disabled = compared.size < 2;
-  }
-  function wireCompareChecks() {
-    $$('[data-compare]').forEach(input => input.addEventListener("change", () => {
-      if (input.checked && compared.size >= 3) { input.checked = false; $("#compare-summary").textContent = "Maximum three cases."; return; }
-      if (input.checked) compared.add(input.dataset.compare); else compared.delete(input.dataset.compare);
-      updateCompareTray();
-    }));
-  }
-  function openCompare() {
-    const selected = [...compared].map(id => cases.find(item => item.public_id === id)).filter(Boolean);
-    if (selected.length < 2) return;
-    const rows = [["Place and setting", item => item.location || item.region], ["Climate pressure", item => item.climate_mechanism || arr(item.hazards).join(", ")], ["Adaptation response", item => item.adaptation_action], ["Implementation stage", stage], ["Evidence available", item => item.reported_outcomes || arr(item.outcomes).join(" ")], ["What may transfer", item => item.transferability], ["Important limits", item => item.limitations], ["Source status", sourceDate]];
-    $("#compare-detail").innerHTML = `<div class="compare-head"><div><p class="eyebrow">Research utility</p><h2 id="compare-title">Compare selected cases</h2></div><button class="close" type="button" aria-label="Close comparison">&times;</button></div><div class="compare-table-wrap"><table class="compare-table"><thead><tr><th>Field</th>${selected.map(item => `<th>${esc(item.title)}</th>`).join("")}</tr></thead><tbody>${rows.map(([label, getter]) => `<tr><th>${esc(label)}</th>${selected.map(item => `<td>${esc(normalize(getter(item)) || "Not recorded")}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
-    $("#compare-overlay").hidden = false; setPageInert(true); $("#compare-detail .close").focus(); $("#compare-detail .close").addEventListener("click", closeCompare);
-  }
-  function closeCompare() { $("#compare-overlay").hidden = true; setPageInert(false); $("#open-compare").focus(); }
 
   function csvCell(value) { return `"${String(value ?? "").replaceAll('"', '""')}"`; }
   function exportCsv() {
@@ -342,11 +321,11 @@
 
   let tourStep = 0;
   function showTourStep(index) {
-    tourStep = Math.max(0, Math.min(4, index));
+    tourStep = Math.max(0, Math.min(3, index));
     $$('[data-tour-step]').forEach(step => { step.hidden = Number(step.dataset.tourStep) !== tourStep; });
     $("#tour-back").disabled = tourStep === 0;
-    $("#tour-next").textContent = tourStep === 4 ? "Finish" : "Next";
-    $("#tour-status").textContent = `Step ${tourStep + 1} of 5`;
+    $("#tour-next").textContent = tourStep === 3 ? "Finish" : "Next";
+    $("#tour-status").textContent = `Step ${tourStep + 1} of 4`;
   }
   function openTour() { showTourStep(0); $("#tour-overlay").hidden = false; setPageInert(true); $("#tour-close").focus(); }
   function closeTour() { $("#tour-overlay").hidden = true; setPageInert(false); $("#tour-trigger").focus(); }
@@ -363,20 +342,16 @@
   });
   $("#filter-trigger").addEventListener("click", openFilters); $("#filter-close").addEventListener("click", closeFilters); $("#filter-backdrop").addEventListener("click", closeFilters); $("#apply-filters").addEventListener("click", closeFilters);
   $("#case-overlay").addEventListener("click", event => { if (event.target.id === "case-overlay") closeCase(); });
-  $("#compare-overlay").addEventListener("click", event => { if (event.target.id === "compare-overlay") closeCompare(); });
-  $("#clear-compare").addEventListener("click", () => { compared.clear(); $$('[data-compare]').forEach(input => { input.checked = false; }); updateCompareTray(); });
-  $("#open-compare").addEventListener("click", openCompare);
   $("#tour-trigger").addEventListener("click", openTour);
   $("#tour-close").addEventListener("click", closeTour);
   $("#tour-back").addEventListener("click", () => showTourStep(tourStep - 1));
-  $("#tour-next").addEventListener("click", () => { if (tourStep === 4) closeTour(); else showTourStep(tourStep + 1); });
+  $("#tour-next").addEventListener("click", () => { if (tourStep === 3) closeTour(); else showTourStep(tourStep + 1); });
   $("#tour-overlay").addEventListener("click", event => { if (event.target.id === "tour-overlay") closeTour(); });
   $(".menu-button").addEventListener("click", event => { const open = event.currentTarget.getAttribute("aria-expanded") === "true"; event.currentTarget.setAttribute("aria-expanded", String(!open)); $("#site-nav").classList.toggle("open", !open); });
   $("#site-nav").addEventListener("click", () => { $("#site-nav").classList.remove("open"); $(".menu-button").setAttribute("aria-expanded", "false"); });
   document.addEventListener("keydown", event => {
     if (!$("#tour-overlay").hidden) { if (event.key === "Escape") closeTour(); else trap(event, $("#review-tour")); return; }
     if (!$("#case-overlay").hidden) { if (event.key === "Escape") closeCase(); else trap(event, $("#case-detail")); return; }
-    if (!$("#compare-overlay").hidden) { if (event.key === "Escape") closeCompare(); else trap(event, $("#compare-detail")); return; }
     if ($("#filter-panel").classList.contains("open")) { if (event.key === "Escape") closeFilters(); else trap(event, $("#filter-panel")); }
   });
   addEventListener("popstate", routeFromLocation);
@@ -387,6 +362,10 @@
     ? `Published snapshot ${meta.snapshot_id || meta.dataset_version || ""}.`
     : `${previewMode ? "Local website preview" : "Internal staging snapshot"} ${meta.snapshot_id || meta.dataset_version || "pending"}. No public-use approval is implied.`;
   $("#footer-version").textContent = meta.snapshot_id || meta.dataset_version || "pending";
+  $$('[data-site-copy]').forEach(node => {
+    const value = clean(siteCopy[node.dataset.siteCopy]);
+    if (value) node.textContent = value;
+  });
   $("#hero-case-count").textContent = String(cases.length);
   window.CAR_WASH_MAP?.init(); readUrlState(); drawFeatured(); draw({syncUrl:false}); setResultView(resultView); wireCaseAnchors(); routeFromLocation(); locatePreviewTarget();
 })();

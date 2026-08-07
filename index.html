@@ -7,7 +7,7 @@
   <title>CAR-WASH Climate Adaptation Case Studies</title>
   <link rel="icon" href="data:,">
   <link rel="preload" as="image" href="assets/site-hero-washington-state-mount-rainier-nps-1280.jpg" fetchpriority="high">
-  <link rel="stylesheet" href="public.css?v=staging-20260803T191226-99387010">
+  <link rel="stylesheet" href="public.css?v=staging-20260807T004924-44fd7d55">
 </head>
 <body class="research-atlas">
   <a class="skip-link" href="#library">Skip to case studies</a>
@@ -34,15 +34,16 @@
 
   <section class="hero research-atlas-hero" aria-labelledby="hero-title">
     <div class="hero-copy">
-      <p class="eyebrow">Washington climate adaptation atlas</p>
-      <h1 id="hero-title">Climate Adaptation Case Studies for Washington State</h1>
-      <p>Washington and Pacific Northwest cases are shown alongside clearly labelled transferable examples from other regions.</p>
-      <p class="hero-scope"><strong id="hero-case-count">27</strong> source-linked case records in one human-reviewed working collection.</p>
+      <p class="eyebrow" id="site-eyebrow" data-site-copy="site_eyebrow">Washington climate adaptation repository</p>
+      <h1 id="hero-title" data-site-copy="site_title">Climate Adaptation Case Study Repository</h1>
+      <p id="hero-summary" data-site-copy="hero_summary">Explore source-linked examples of how communities and institutions are responding to climate risks in Washington and beyond.</p>
+      <p class="beta-note" id="beta-note" data-site-copy="beta_note">Beta library. Search results are limited to the sources currently connected to this repository and should not be treated as a complete inventory.</p>
+      <p class="hero-scope"><strong id="hero-case-count">27</strong> <span data-site-copy="hero_scope">source-linked case records in one human-reviewed working collection.</span></p>
     </div>
     <a class="hero-guide" href="#using-cases">
-      <span>Why case studies?</span>
-      <strong>See the action, evidence, and limits behind each example.</strong>
-      <b>How to use this library <span aria-hidden="true">&rarr;</span></b>
+      <span data-site-copy="guide_kicker">Why case studies?</span>
+      <strong data-site-copy="guide_heading">See the action, evidence, and limits behind each example.</strong>
+      <b><span data-site-copy="guide_link_label">How to use this repository</span> <span aria-hidden="true">&rarr;</span></b>
     </a>
   </section>
 
@@ -55,10 +56,10 @@
 
     <section class="portfolio-intro" aria-labelledby="portfolio-title">
       <div>
-        <p class="eyebrow">Explore the portfolio</p>
-        <h2 id="portfolio-title">Adaptation in practice, with the evidence attached.</h2>
+        <p class="eyebrow" data-site-copy="portfolio_eyebrow">Explore the repository</p>
+        <h2 id="portfolio-title" data-site-copy="portfolio_heading">Adaptation in practice, with the evidence attached.</h2>
       </div>
-      <p>Move from a statewide view into specific actions, implementation stages, reported evidence, and limits. Every card opens a source-linked research record.</p>
+      <p data-site-copy="portfolio_summary">Move from a statewide view into specific actions, implementation stages, reported evidence, and limits. Every card opens a source-linked research record.</p>
     </section>
 
     <div class="mobile-result-bar">
@@ -85,7 +86,6 @@
         <div class="view-switcher" role="group" aria-label="Results view">
           <button class="view-button active" type="button" data-view="grid" aria-pressed="true">Grid</button>
           <button class="view-button" type="button" data-view="map" aria-pressed="false">Map</button>
-          <button class="view-button" type="button" data-view="compare" aria-pressed="false">Compare</button>
         </div>
         <button id="export-csv" class="tool-button" type="button">Export filtered CSV</button>
         <label>Sort <select id="sort"><option value="curated">Curated order</option><option value="collection">Washington first</option><option value="title">Title A-Z</option><option value="review">Latest source check</option></select></label>
@@ -99,13 +99,13 @@
     </div>
     <section id="map-view" class="map-workspace" hidden aria-labelledby="map-title">
       <header class="map-workspace-head">
-        <div><p class="eyebrow">National case atlas</p><h2 id="map-title">Published cases, mapped by adaptation pressure</h2><p id="map-result-summary" aria-live="polite"></p></div>
+        <div><p class="eyebrow" data-site-copy="map_eyebrow">Case map</p><h2 id="map-title" data-site-copy="map_heading">Published cases by location and climate pressure</h2><p id="map-result-summary" aria-live="polite"></p></div>
         <div class="map-layer-switch" aria-label="Map layers">
           <button class="active" type="button" data-map-layer="cases">Published cases</button>
           <button type="button" data-map-layer="climate">Climate context</button>
         </div>
       </header>
-      <div class="map-boundary"><strong>Read the layers separately.</strong> Case density shows where this library has examples; it does not show where hazards are increasing.</div>
+      <div class="map-boundary"><strong data-site-copy="map_boundary_heading">Read the layers separately.</strong> <span data-site-copy="map_boundary_summary">Case density shows where this repository has examples; it does not show where hazards are increasing.</span></div>
       <div class="map-layout">
         <div class="map-canvas-wrap">
           <svg id="atlas-map" class="atlas-map" viewBox="0 0 1000 520" role="group" aria-label="United States map with published CAR-WASH case locations"></svg>
@@ -120,66 +120,57 @@
     </section>
 
     <section id="using-cases" class="use-guide">
-      <header><p class="eyebrow">Using the library</p><h2>Use evidence boundaries, not headlines alone.</h2><p>These records support comparison and internal discussion. Open the controlling source before reusing a claim.</p></header>
+      <header><p class="eyebrow" data-site-copy="use_eyebrow">Using the repository</p><h2 id="use-heading" data-site-copy="use_heading">How to use these case studies</h2><p id="use-summary" data-site-copy="use_summary">Use each case to understand a specific adaptation action, then check the original source, implementation context, and reported evidence before applying the lesson elsewhere.</p></header>
       <div class="guide-grid">
-        <article><h3>1. Select</h3><p>Filter by hazard, geography, theme, and implementation stage. A case is a bounded action, not an entire plan or program universe.</p></article>
-        <article><h3>2. Read evidence</h3><p>Separate measured outcomes from reported or anticipated benefits. Missing evidence is shown as a limit, not silently filled.</p></article>
-        <article><h3>3. Test transferability</h3><p>Compare governance, scale, climate mechanism, implementation stage, and site constraints before applying a lesson elsewhere.</p></article>
-        <article><h3>4. Cite and correct</h3><p>Use the case citation and source link. Report broken links, inaccurate fields, or accessibility problems to the project team.</p></article>
+        <article><h3 data-site-copy="use_step_1_heading">1. Find a relevant action</h3><p data-site-copy="use_step_1_summary">Filter by hazard, geography, sector, strategy, and implementation stage. Each record focuses on a specific action or program.</p></article>
+        <article><h3 data-site-copy="use_step_2_heading">2. Check the evidence</h3><p data-site-copy="use_step_2_summary">Open the original source and distinguish completed work from plans, reported benefits, and measured outcomes.</p></article>
+        <article><h3 data-site-copy="use_step_3_heading">3. Consider local fit</h3><p data-site-copy="use_step_3_summary">Review governance, scale, climate mechanism, implementation stage, and site constraints before transferring a lesson.</p></article>
+        <article><h3 data-site-copy="use_step_4_heading">4. Cite and improve</h3><p data-site-copy="use_step_4_summary">Use the citation and original-source link. Report broken links, inaccurate fields, or accessibility problems to the project team.</p></article>
       </div>
     </section>
 
     <section id="methodology" class="methodology">
-      <div><h2>Methodology and definitions</h2><p>Cases are screened for adaptation relevance, bounded action, usable source evidence, and review needs. Inclusion in this staging library does not by itself establish effectiveness or publication approval.</p></div>
+      <div><h2 data-site-copy="methodology_heading">Methodology and definitions</h2><p data-site-copy="methodology_summary">Cases are screened for adaptation relevance, bounded action, usable source evidence, and review needs. Inclusion in this staging library does not by itself establish effectiveness or publication approval.</p></div>
       <dl>
         <div><dt>Planned / pilot</dt><dd>Action is proposed, funded, designed, or being tested. Benefits must not be described as measured outcomes.</dd></div>
         <div><dt>Implemented / operational</dt><dd>Action exists or is operating. Outcome claims still require explicit source evidence.</dd></div>
         <div><dt>Transferability</dt><dd>Conditions under which an approach may inform another place; it is not a guarantee of equivalent results.</dd></div>
-        <div><dt>Update cycle</dt><dd>Source status and case fields are checked through a human-reviewed workflow before a new immutable snapshot is activated.</dd></div>
+        <div><dt>Update cycle</dt><dd>Source status and case fields are checked through a human-reviewed workflow before a new public version is released.</dd></div>
       </dl>
     </section>
     <p id="snapshot-meta" class="snapshot-meta"></p>
   </main>
 
-  <aside id="compare-tray" class="compare-tray" hidden aria-live="polite">
-    <div><strong>Compare cases</strong><span id="compare-summary"></span></div>
-    <div class="compare-actions"><button id="clear-compare" type="button">Clear</button><button id="open-compare" type="button">Compare selected</button></div>
-  </aside>
-
   <div id="case-overlay" class="overlay" hidden>
     <article id="case-detail" class="case-detail" role="dialog" aria-modal="true" aria-labelledby="detail-title" aria-describedby="detail-summary"></article>
-  </div>
-  <div id="compare-overlay" class="overlay" hidden>
-    <article id="compare-detail" class="compare-detail" role="dialog" aria-modal="true" aria-labelledby="compare-title"></article>
   </div>
   <div id="tour-overlay" class="overlay" hidden>
     <section id="review-tour" class="review-tour" role="dialog" aria-modal="true" aria-labelledby="tour-title">
       <div class="tour-head">
-        <div><p class="eyebrow">Five-step review</p><h2 id="tour-title">Try the stakeholder review path</h2></div>
+        <div><p class="eyebrow">Four-step review</p><h2 id="tour-title">Try the stakeholder review path</h2></div>
         <button id="tour-close" class="tour-close" type="button" aria-label="Close review tour">&times;</button>
       </div>
-      <div class="tour-step" data-tour-step="0"><b>1 of 5 · Search</b><h3>Find one known case</h3><p>Use a location, adaptation action, organization, or keyword.</p></div>
-      <div class="tour-step" data-tour-step="1" hidden><b>2 of 5 · Filter</b><h3>Narrow the collection</h3><p>Apply a hazard, region, theme, or implementation-stage filter.</p></div>
-      <div class="tour-step" data-tour-step="2" hidden><b>3 of 5 · Evidence</b><h3>Open a case detail</h3><p>Check the bounded action, supported claim, limits, source health, and review status.</p></div>
-      <div class="tour-step" data-tour-step="3" hidden><b>4 of 5 · Compare</b><h3>Compare two cases</h3><p>Select two cards and compare climate mechanism, action, stage, outcomes, and limitations.</p></div>
-      <div class="tour-step" data-tour-step="4" hidden><b>5 of 5 · Reuse carefully</b><h3>Copy a citation or export CSV</h3><p>Use the controlling source before reusing any claim, then record feedback.</p></div>
-      <div class="tour-actions"><button id="tour-back" type="button">Back</button><span id="tour-status" aria-live="polite">Step 1 of 5</span><button id="tour-next" type="button">Next</button></div>
+      <div class="tour-step" data-tour-step="0"><b>1 of 4 · Search</b><h3>Find one known case</h3><p>Use a location, adaptation action, organization, or keyword.</p></div>
+      <div class="tour-step" data-tour-step="1" hidden><b>2 of 4 · Filter</b><h3>Narrow the collection</h3><p>Apply a hazard, region, theme, strategy, or implementation-stage filter.</p></div>
+      <div class="tour-step" data-tour-step="2" hidden><b>3 of 4 · Evidence</b><h3>Open a case detail</h3><p>Check the action, evidence, limits, source date, and local context.</p></div>
+      <div class="tour-step" data-tour-step="3" hidden><b>4 of 4 · Reuse carefully</b><h3>Copy a citation or export CSV</h3><p>Use the original source before reusing any claim, then record feedback.</p></div>
+      <div class="tour-actions"><button id="tour-back" type="button">Back</button><span id="tour-status" aria-live="polite">Step 1 of 4</span><button id="tour-next" type="button">Next</button></div>
     </section>
   </div>
 
   <footer class="site-footer">
-    <div><strong>CAR-WASH Case Study Library</strong><p>Human-reviewed research staging for WASCO/CIG discussion.</p></div>
+    <div><strong data-site-copy="footer_heading">CAR-WASH Case Study Repository</strong><p data-site-copy="footer_summary">Human-reviewed research staging for WASCO/CIG discussion.</p></div>
     <nav aria-label="Footer"><a href="#methodology">Methodology</a><a href="#using-cases">Accessibility and use</a><a href="mailto:cig@uw.edu">Contact</a><a href="./">Case library</a></nav>
     <p>Version <span id="footer-version">snapshot pending</span>. Image rights and UW deployment require separate approval.</p>
   </footer>
 
   <script>window.__wascoConsoleErrors=[];addEventListener('error',e=>window.__wascoConsoleErrors.push(String(e.message)));addEventListener('unhandledrejection',e=>window.__wascoConsoleErrors.push(String(e.reason)));</script>
   <script>window.CAR_WASH_STATIC_SNAPSHOT=true;</script>
-  <script src="cases.js?v=staging-20260803T191226-99387010"></script>
-  <script src="us-states.js?v=staging-20260803T191226-99387010"></script>
-  <script src="map-cases.js?v=staging-20260803T191226-99387010"></script>
-  <script src="climate-context.js?v=staging-20260803T191226-99387010"></script>
-  <script src="public-map.js?v=staging-20260803T191226-99387010"></script>
-  <script src="public.js?v=staging-20260803T191226-99387010"></script>
+  <script src="cases.js?v=staging-20260807T004924-44fd7d55"></script>
+  <script src="us-states.js?v=staging-20260807T004924-44fd7d55"></script>
+  <script src="map-cases.js?v=staging-20260807T004924-44fd7d55"></script>
+  <script src="climate-context.js?v=staging-20260807T004924-44fd7d55"></script>
+  <script src="public-map.js?v=staging-20260807T004924-44fd7d55"></script>
+  <script src="public.js?v=staging-20260807T004924-44fd7d55"></script>
 </body>
 </html>
