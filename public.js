@@ -220,7 +220,7 @@
 
   function citation(item) {
     const checked = clean(item.last_source_checked_at) || "source check pending";
-    return `CAR-WASH. “${normalize(item.title)}.” Climate Adaptation Case Studies, ${normalize(item.collection)}. ${siteText("source_date_label", "Source checked")} ${checked}. ${new URL(caseHref(item), location.href).href}`;
+    return `CAR-WASH. “${normalize(item.title)}.” ${siteText("site_title", "Climate Adaptation Case Study Repository")}, ${normalize(item.collection)}. ${siteText("source_date_label", "Source checked")} ${checked}. ${new URL(caseHref(item), location.href).href}`;
   }
 
   async function copyText(value, status) {
@@ -366,6 +366,7 @@
     const value = clean(siteCopy[node.dataset.siteCopy]);
     if (value) node.textContent = value;
   });
+  document.title = `CAR-WASH ${siteText("site_title", "Climate Adaptation Case Study Repository")}`;
   $("#hero-case-count").textContent = String(cases.length);
   window.CAR_WASH_MAP?.init(); readUrlState(); drawFeatured(); draw({syncUrl:false}); setResultView(resultView); wireCaseAnchors(); routeFromLocation(); locatePreviewTarget();
 })();
