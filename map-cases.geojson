@@ -1,7 +1,7 @@
 {
   "type": "FeatureCollection",
-  "snapshot_id": "staging-20260807T010828-b1643ec7",
-  "case_count": 28,
+  "snapshot_id": "staging-20260807T022618-bdd9ece7",
+  "case_count": 29,
   "scope_note": "Points show published case-study locations. Point density does not measure hazard frequency, severity, or change.",
   "features": [
     {
@@ -702,6 +702,31 @@
         "location_precision": "CITY_CENTROID",
         "coordinate_status": "PROVISIONAL_GAZETTEER",
         "display_order": 27
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -121.4905,
+          47.4009
+        ]
+      },
+      "properties": {
+        "public_id": "case-032bdd50d15c",
+        "slug": "case-032bdd50d15c",
+        "title": "With 10 Large Wildfires Burning Across 200,000 Acres and Extreme Fire Conditions Ahead, DNR Shores up Resources With The National Guard",
+        "location": "Washington",
+        "collection": "Washington and Pacific Northwest",
+        "summary": "In Washington, Project partners leads the documented adaptation work. The adaptation action requires source repair. The cited source documents the project context and implementation approach. It should not be read as evidence that the same results will occur in another community, watershed, utility, or institutional setting.",
+        "primary_hazard": "OTHER_ADAPTATION",
+        "hazard_label": "Other adaptation",
+        "hazard_color": "#7A8492",
+        "implementation_stage": "Planning and design",
+        "location_precision": "STATE_CENTROID",
+        "coordinate_status": "PROVISIONAL_GAZETTEER",
+        "display_order": 28
       }
     }
   ]

@@ -1,8 +1,8 @@
 {
   "schema": "car-wash-public-release-manifest-v1",
-  "snapshot_id": "staging-20260807T010828-b1643ec7",
-  "generated_at": "2026-08-07T01:08:28.309624+00:00",
-  "case_count": 28,
+  "snapshot_id": "staging-20260807T022618-bdd9ece7",
+  "generated_at": "2026-08-07T02:26:18.658279+00:00",
+  "case_count": 29,
   "release_profile": "INTERNAL_FULL",
   "visibility": "local-editorial-preview-only",
   "production_deployment": "DISABLED",
@@ -36,9 +36,11 @@
     "case-692e73b7e651": "7e356a2c3dcc4c31bee5b56f2fc6bddd232b2240df281bf87aed2dbfb93fd399",
     "case-4ede7f783a7c": "627fc500d253188161946cb83c171f1285de2e70980e23214a863f1c77fd9336",
     "case-65449b839105": "d6c08396458ad91473ffdb2354210af887dddb9f31a60152a0f762634b03e207",
-    "case-d3a63b579b60": "bfbaa8b8c5cef110e8e8288f8974be1c7efaedb3432e61a67fd819d2eab71850"
+    "case-d3a63b579b60": "bfbaa8b8c5cef110e8e8288f8974be1c7efaedb3432e61a67fd819d2eab71850",
+    "case-032bdd50d15c": "131abc1326e414e1a5c09ecd7de7bf54c83ceaf5ba3d5cd164040fa0732b5fcb"
   },
   "exact_case_versions": {
+    "case-032bdd50d15c9f65": "case-032bdd50d15c9f65-v-2c8758356180",
     "case-11c6d184d7c59fbc": "case-11c6d184d7c59fbc-v-3ba7a5e6c6bd",
     "case-f1e1186726cc4e3e": "case-f1e1186726cc4e3e-v-f1ab81684778",
     "case-ea09a24590a79bd4": "case-ea09a24590a79bd4-v-3dc82e87a615",
@@ -68,8 +70,8 @@
     "case-65449b8391057437": "case-65449b8391057437-v-59913b1fb364",
     "case-d3a63b579b601b80": "case-d3a63b579b601b80-v-e151a62d9081"
   },
-  "site_revision_id": "site-revision-eee87acb3f476d44",
-  "site_revision_hash": "eee87acb3f476d44ab934068c46a3afb74cf919356a6439f80f1fe0dd7e7473c",
+  "site_revision_id": null,
+  "site_revision_hash": null,
   "site_copy": {
     "site_eyebrow": "Washington climate adaptation repository",
     "site_title": "Climate Adaptation Case Study Repository",
@@ -104,7 +106,7 @@
     "footer_heading": "CAR-WASH Case Study Repository",
     "footer_summary": "Human-reviewed research staging for WASCO/CIG discussion."
   },
-  "source_commit_sha": "39296368dc5aad159263903c8ca233307c29c172",
+  "source_commit_sha": "0000000000000000000000000000000000000000",
   "public_schema_version": "public-case-copy-v1",
   "taxonomy_version": "case-taxonomy-v1",
   "render_mode": "INTERNAL_STAGING",
@@ -137,6 +139,7 @@
     "assets/case-692e73b7e651-current-013-sdge-wildfire.jpg": "9757129fc97389da29caf4ef55077b9640aeee73a7ae16e0f3396886b34152e8",
     "assets/case-4ede7f783a7c-current-012-invasive-plants.jpg": "20680e2ac92b33354faa373351337fba77e55884b727e7dc75ad75e265ee7aa0",
     "assets/case-65449b839105-current-006-yakama.jpg": "d887ec17cdcfa7bb4a21df95b5017881d655151610f665270800bebf11000742",
-    "assets/case-d3a63b579b60-current-mismatch-tulalip.jpg": "aeb7da47694070acc057f14ae17394944afabd1b19269279839d2c5a8595ab3b"
+    "assets/case-d3a63b579b60-current-mismatch-tulalip.jpg": "aeb7da47694070acc057f14ae17394944afabd1b19269279839d2c5a8595ab3b",
+    "assets/case-032bdd50d15c-yakama-riparian.svg": "82c691ee78c1c6df6126a422a14a597ae3a5244ba2d57e101508a8fe1a2850ed"
   }
 }
